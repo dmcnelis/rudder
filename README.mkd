@@ -1,12 +1,10 @@
-Rudder is a package to help you easily apply some predicitive analytics to your data.
+Rudder is a meant to provide a framework to help make it easier
+to apply machine learning techniques to your data.
 
-Rudder is named after the boat and plane apparatus that enables one  to stear.  The
-idea being that this package will learn and make intelligent decisions and recommendations.
+The first few iterations will be mostly utility based in order to 
+provide ways to massage a dataset into a set of data that can 
+then have statistical analysis performed on it.
 
-The first version should, when complete, take in an arbitrary data set and build and
-attempt to build an  accurate regression model.  The application will test multiple
-regression methods as well as mutating the incoming data in different ways to achieve
-the most accurate model.  
-
-At first, most accurate models will be defined as the best Adjusted R^2 model.  The
-definition of accurate will eventually be more refined as well as more tunable.
+Everything in this framework should be thread safe, if you find something
+that is not, please post an issue, a patch, or a unit test illustrating
+the issue.

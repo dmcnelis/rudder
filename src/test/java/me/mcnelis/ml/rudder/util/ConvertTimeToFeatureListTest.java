@@ -3,21 +3,26 @@ package me.mcnelis.ml.rudder.util;
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
+import java.util.HashMap;
+
+import me.mcnelis.ml.rudder.exceptions.ConvertTimeToFeaturesDataTypeException;
 
 import org.apache.commons.math.util.ResizableDoubleArray;
 import org.junit.Test;
+
+
 
 public class ConvertTimeToFeatureListTest {
 
 	@Test
 	public void testAddFeatureSuccess() {
-		ConvertTimeToFeatureList c = new ConvertTimeToFeatureList();
+		ConvertTimeToFeatures c = new ConvertTimeToFeatures();
 		assertTrue(c.addFeature(TimeFeatures.DAY_OF_WEEK));
 	}
 	
 	@Test
 	public void testAddFeatureFailure() {
-		ConvertTimeToFeatureList c = new ConvertTimeToFeatureList();
+		ConvertTimeToFeatures c = new ConvertTimeToFeatures();
 		assertTrue(c.addFeature(TimeFeatures.DAY_OF_WEEK));
 		assertFalse(c.addFeature(TimeFeatures.DAY_OF_WEEK));
 	}
@@ -27,10 +32,10 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		c.set(2011, 12, 6, 0, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
 		
-		assertEquals(1d, convert.getHourList().getElement(0), .2);
+		assertEquals(1d, convert.getHourList().get("0"), .2);
 		
 	}
 	
@@ -39,10 +44,10 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		c.set(2011, 12, 6, 6, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
 		
-		assertEquals(1d, convert.getHourList().getElement(6), .2);
+		assertEquals(1d, convert.getHourList().get("6"), .2);
 		
 	}
 	
@@ -51,10 +56,10 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		c.set(2011, 12, 6, 16, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
 		
-		assertEquals(1d, convert.getHourList().getElement(16), .2);
+		assertEquals(1d, convert.getHourList().get("16"), .2);
 		
 	}
 	
@@ -63,11 +68,11 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		c.set(2011, 12, 6, 23, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getHourList();
-		for(int i=0; i<results.getNumElements(); i++) {
-			assertEquals(0d, results.getElement(i), .2);
+		HashMap<String, Double> results = convert.getHourList();
+		for(String key : results.keySet()) {
+			assertEquals(0d, results.get(key), .2);
 		}
 		
 	}
@@ -77,11 +82,11 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		c.set(2011, 12, 6, 23, 12);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getMinuteList();
+		HashMap<String, Double> results = convert.getMinuteList();
 		
-		assertEquals(1d, results.getElement(12), .2);
+		assertEquals(1d, results.get("12"), .2);
 		
 		
 	}
@@ -91,11 +96,11 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		c.set(2011, 12, 6, 23, 59);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getMinuteList();
-		for(int i=0; i<results.getNumElements(); i++) {
-			assertEquals(0d, results.getElement(i), .2);
+		HashMap<String, Double> results = convert.getMinuteList();
+		for(String key : results.keySet()) {
+			assertEquals(0d, results.get(key), .2);
 		}
 		
 	}
@@ -106,11 +111,11 @@ public class ConvertTimeToFeatureListTest {
 		
 		c.set(2011, 11,4, 12, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getDayOfWeekList();
+		HashMap<String, Double> results = convert.getDayOfWeekList();
 		
-		assertEquals(0d, results.getElement(3), .2);
+		assertEquals(0d, results.get("3"), .2);
 		
 	}
 	
@@ -120,12 +125,12 @@ public class ConvertTimeToFeatureListTest {
 		
 		c.set(2011, 11,3, 12, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getDayOfWeekList();
+		HashMap<String, Double> results = convert.getDayOfWeekList();
 		
-		for(int i=0; i<results.getNumElements(); i++) {
-			assertEquals(0d, results.getElement(i), .2);
+		for(String key : results.keySet()) {
+			assertEquals(0d, results.get(key), .2);
 		}
 		
 	}
@@ -136,11 +141,11 @@ public class ConvertTimeToFeatureListTest {
 		
 		c.set(2011, 0,3, 12, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getMonthList();
+		HashMap<String, Double> results = convert.getMonthList();
 	
-		assertEquals(1d, results.getElement(0), .2);
+		assertEquals(1d, results.get("0"), .2);
 		
 	}
 	
@@ -150,12 +155,12 @@ public class ConvertTimeToFeatureListTest {
 		
 		c.set(2011, 11,3, 12, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getMonthList();
+		HashMap<String, Double> results = convert.getMonthList();
 		
-		for(int i=0; i<results.getNumElements(); i++) {
-			assertEquals(0d, results.getElement(i), .2);
+		for(String key : results.keySet()) {
+			assertEquals(0d, results.get(key), .2);
 		}
 		
 	}
@@ -166,10 +171,15 @@ public class ConvertTimeToFeatureListTest {
 		
 		c.set(2004, 11,30, 12, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getDayOYearList();
-		assertEquals(1d, results.getElement(364), .2);
+		HashMap<String, Double> results = convert.getDayOYearList();
+		for(String key : results.keySet()) {
+			if(results.get(key) > .5)
+				System.out.println(key);
+			assertEquals(0d, results.get(key), .2);
+		}
+		assertEquals(1d, results.get("363"), .2);
 		
 		
 	}
@@ -180,12 +190,13 @@ public class ConvertTimeToFeatureListTest {
 		
 		c.set(2004, 11,31, 12, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getDayOYearList();
+		HashMap<String, Double> results = convert.getDayOYearList();
 
-		for(int i=0; i<results.getNumElements(); i++) {
-			assertEquals(0d, results.getElement(i), .2);
+		for(String key : results.keySet()) {
+			
+			assertEquals(0d, results.get(key), .2);
 		}
 		
 	}
@@ -196,10 +207,12 @@ public class ConvertTimeToFeatureListTest {
 		
 		c.set(2001, 11,30, 12, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getDayOYearList();
-		assertEquals(1d, results.getElement(364), .2);
+		HashMap<String, Double> results = convert.getDayOYearList();
+		
+		assertEquals(1d, results.get("364"), .2);
+		
 		
 		
 	}
@@ -210,12 +223,12 @@ public class ConvertTimeToFeatureListTest {
 		
 		c.set(2001, 11,31, 12, 2);
 		
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		convert.addFeature(TimeFeatures.HOUR);
-		ResizableDoubleArray results = convert.getDayOYearList();
+		HashMap<String, Double> results = convert.getDayOYearList();
 
-		for(int i=0; i<results.getNumElements(); i++) {
-			assertEquals(0d, results.getElement(i), .2);
+		for(String key : results.keySet()) {
+			assertEquals(0d, results.get(key), .2);
 		}
 		
 	}
@@ -225,7 +238,7 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		
 		c.set(2001, 11,31, 12, 2);
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		assertEquals(59, convert.getCardinalities().get("minutes").intValue());
 	}
 	
@@ -234,7 +247,7 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		
 		c.set(2001, 11,31, 12, 2);
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		assertEquals(23, convert.getCardinalities().get("hours").intValue());
 	}
 	
@@ -243,7 +256,7 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		
 		c.set(2001, 11,31, 12, 2);
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		assertEquals(6, convert.getCardinalities().get("days_of_week").intValue());
 	}
 	
@@ -252,7 +265,7 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		
 		c.set(2001, 11,31, 12, 2);
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		assertEquals(365, convert.getCardinalities().get("days_of_year").intValue());
 	}
 	
@@ -261,8 +274,34 @@ public class ConvertTimeToFeatureListTest {
 		Calendar c = Calendar.getInstance();
 		
 		c.set(2001, 11,31, 12, 2);
-		ConvertTimeToFeatureList convert = new ConvertTimeToFeatureList(c);
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures(c);
 		assertEquals(11, convert.getCardinalities().get("months").intValue());
+	}
+	
+	@Test
+	public void failToSetData() {
+		String test = "test";
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures();
+		boolean success = false;
+		try{
+			convert.setData(test);
+		} catch (ConvertTimeToFeaturesDataTypeException e) {
+			success = true;
+		}
+		assertTrue(success);
+	}
+	
+	@Test
+	public void succeedToSetData() {
+		Calendar test = Calendar.getInstance();
+		ConvertTimeToFeatures convert = new ConvertTimeToFeatures();
+		boolean success = false;
+		try{
+			success = convert.setData(test);
+		} catch (ConvertTimeToFeaturesDataTypeException e) {
+			success = false;
+		}
+		assertTrue(success);
 	}
 
 }

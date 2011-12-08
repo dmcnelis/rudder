@@ -3,9 +3,12 @@ package me.mcnelis.ml.rudder.util;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import org.apache.commons.math.util.ResizableDoubleArray;
+import me.mcnelis.ml.rudder.exceptions.ConvertToFeaturesException;
+
+import com.google.common.collect.BiMap;
 
 public interface ConvertToFeatures extends Serializable {
-	ResizableDoubleArray run();
+	HashMap<String, Double> run();
 	HashMap<String, Integer> getCardinalities();
+	boolean setData(Object data) throws ConvertToFeaturesException;
 }
