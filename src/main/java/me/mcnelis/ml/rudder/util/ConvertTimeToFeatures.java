@@ -117,6 +117,8 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	
 	/**
 	 * Runs based on options that are set
+	 * 
+	 * @TODO update to return a FeatureList populated with Binary Features!
 	 */
 	public HashMap<String, Double> run() {
 		HashMap<String, Double> result = new HashMap<String, Double>();
