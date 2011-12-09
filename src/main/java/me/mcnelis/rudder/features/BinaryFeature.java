@@ -14,6 +14,16 @@ public class BinaryFeature extends Feature {
 	private static final long serialVersionUID = 1L;
 	protected Boolean featureValue;
 	
+	public BinaryFeature() {
+		super();
+	}
+	public BinaryFeature(String featureName, Boolean featureValue) {
+		super();
+		this.featureName = featureName;
+		this.featureValue = featureValue;
+	}
+
+
 	public String getFeatureName() {
 		return featureName;
 	}

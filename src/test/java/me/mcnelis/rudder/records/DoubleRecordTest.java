@@ -1,10 +1,11 @@
-package me.mcnelis.ml.rudder;
+package me.mcnelis.rudder.records;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import me.mcnelis.rudder.features.FeatureList;
 import me.mcnelis.rudder.features.NumericFeature;
+import me.mcnelis.rudder.records.DoubleRecord;
 
 import org.junit.Test;
 

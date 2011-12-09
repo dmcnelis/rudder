@@ -1,4 +1,4 @@
-package me.mcnelis.ml.rudder;
+package me.mcnelis.rudder.records;
 
 public class TextRecord extends Record {
 

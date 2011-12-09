@@ -1,9 +1,9 @@
-package me.mcnelis.ml.rudder.util;
+package me.mcnelis.rudder.util;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
-import me.mcnelis.ml.rudder.exceptions.ConvertToFeaturesException;
+import me.mcnelis.rudder.exceptions.ConvertToFeaturesException;
 import me.mcnelis.rudder.features.FeatureList;
 
 import com.google.common.collect.BiMap;

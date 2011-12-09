@@ -1,4 +1,4 @@
-package me.mcnelis.ml.rudder.util;
+package me.mcnelis.rudder.util;
 
 /**
  * For now only going down to minute granularity

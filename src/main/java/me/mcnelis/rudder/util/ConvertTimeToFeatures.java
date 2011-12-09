@@ -1,10 +1,10 @@
-package me.mcnelis.ml.rudder.util;
+package me.mcnelis.rudder.util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import me.mcnelis.ml.rudder.exceptions.ConvertTimeToFeaturesDataTypeException;
+import me.mcnelis.rudder.exceptions.ConvertTimeToFeaturesDataTypeException;
 import me.mcnelis.rudder.features.BinaryFeature;
 import me.mcnelis.rudder.features.FeatureList;
 

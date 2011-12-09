@@ -1,4 +1,4 @@
-package me.mcnelis.ml.rudder.exceptions;
+package me.mcnelis.rudder.exceptions;
 
 
 public class ConvertTimeToFeaturesDataTypeException extends

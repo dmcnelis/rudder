@@ -1,4 +1,4 @@
-package me.mcnelis.ml.rudder.util;
+package me.mcnelis.rudder.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,7 +7,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import me.mcnelis.ml.rudder.exceptions.ConvertTimeToFeaturesDataTypeException;
+import me.mcnelis.rudder.exceptions.ConvertTimeToFeaturesDataTypeException;
+import me.mcnelis.rudder.util.ConvertTimeToFeatures;
+import me.mcnelis.rudder.util.TimeFeatures;
 
 import org.junit.Test;
 
