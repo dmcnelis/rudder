@@ -5,9 +5,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import me.mcnelis.ml.rudder.exceptions.ConvertTimeToFeaturesDataTypeException;
+import me.mcnelis.rudder.features.BinaryFeature;
+import me.mcnelis.rudder.features.FeatureList;
 
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -45,11 +45,11 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 */
 	protected Calendar cal;
 	
-	protected ImmutableMap<String, Double> hoursDefault;
-	protected ImmutableMap<String, Double> dayOfWeekDefault;
-	protected ImmutableMap<String, Double> dayOfYearDefault;
-	protected ImmutableMap<String, Double> monthDefault;
-	protected ImmutableMap<String, Double> minutesDefault;
+	protected ImmutableMap<String, Boolean> hoursDefault;
+	protected ImmutableMap<String, Boolean> dayOfWeekDefault;
+	protected ImmutableMap<String, Boolean> dayOfYearDefault;
+	protected ImmutableMap<String, Boolean> monthDefault;
+	protected ImmutableMap<String, Boolean> minutesDefault;
 	
 	public ConvertTimeToFeatures() {
 		this.init();
@@ -69,47 +69,47 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 * we can do it a single time.
 	 */
 	private synchronized void init() {
-		HashMap<String, Double> holder = null;
+		HashMap<String, Boolean> holder = null;
 		
 		if (this.hoursDefault == null) {
-			holder = new HashMap<String, Double>();
+			holder = new HashMap<String, Boolean>();
 			
 			for (int i=0; i<23; i = i+1) {		
 				Integer q = Integer.valueOf(i);
-				holder.put(q.toString(), 0d);
+				holder.put(q.toString(), false);
 				
 			}
 			this.hoursDefault = ImmutableMap.copyOf(holder);
 		}
 		
 		if(this.dayOfWeekDefault == null) {
-			holder = new HashMap<String, Double>();
+			holder = new HashMap<String, Boolean>();
 			for (int i=0; i<6; i++) {
-				holder.put(Integer.toString(i), 0d);
+				holder.put(Integer.toString(i), false);
 			}	
 			this.dayOfWeekDefault = ImmutableMap.copyOf(holder);
 		}
 		
 		if(this.dayOfYearDefault == null) {
-			holder = new HashMap<String, Double>();
-			for (int i=0; i<366; i++) {
-				holder.put(Integer.toString(i), 0d);
+			holder = new HashMap<String, Boolean>();
+			for (int i=1; i<366; i++) {
+				holder.put(Integer.toString(i), false);
 			}
 			this.dayOfYearDefault = ImmutableMap.copyOf(holder);
 		}
 		
 		if(this.monthDefault == null) {
-			holder = new HashMap<String, Double>();
+			holder = new HashMap<String, Boolean>();
 			for (int i=0; i<11; i++) {
-				holder.put(Integer.toString(i), 0d);
+				holder.put(Integer.toString(i), false);
 			}
 			this.monthDefault = ImmutableMap.copyOf(holder);
 		}
 		
 		if(this.minutesDefault == null) {
-			holder = new HashMap<String, Double>();
+			holder = new HashMap<String, Boolean>();
 			for (int i=0; i<59; i++) {
-				holder.put(Integer.toString(i), 0d);
+				holder.put(Integer.toString(i), false);
 			}
 			this.minutesDefault = ImmutableMap.copyOf(holder);
 		}
@@ -120,22 +120,50 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 * 
 	 * @TODO update to return a FeatureList populated with Binary Features!
 	 */
-	public HashMap<String, Double> run() {
-		HashMap<String, Double> result = new HashMap<String, Double>();
+	public FeatureList run() {
+		FeatureList result = new FeatureList();
 		
 		for (TimeFeatures t : this.featureList) {
 			switch (t) {
+			case MINUTE :
+				result.addAll(this.buildFeatureSet(this.getMinuteList(), t));
+			case HOUR :
+				result.addAll(this.buildFeatureSet(this.getHourList(), t));
 			case MONTH :
-				result.putAll(this.getMonthList());
+				result.addAll(this.buildFeatureSet(this.getMonthList(), t));
 			case DAY_OF_YEAR:
-				result.putAll(this.getDayOYearList());
+				result.addAll(this.buildFeatureSet(this.getDayOYearList(), t));
 			case DAY_OF_WEEK:
-				result.putAll(this.getDayOfWeekList());
+				result.addAll(this.buildFeatureSet(this.getDayOfWeekList(), t));
 			}
 		}
+
 		return result;
 	}
 	
+	private FeatureList buildFeatureSet(HashMap<String, Boolean> result, TimeFeatures t) {
+		String keyBase = "";
+		switch (t) {
+		case MINUTE:
+			keyBase = "Minute ";
+		case HOUR:
+			keyBase = "Hour ";
+		case MONTH :
+			keyBase = "Month ";
+		case DAY_OF_YEAR: 
+			keyBase = "Day of year ";
+		case DAY_OF_WEEK : 
+			keyBase = "Day of week ";
+		}
+		
+		FeatureList list = new FeatureList();
+		for (String key : result.keySet()) {
+			list.add(new BinaryFeature(keyBase + key, result.get(key)));
+		}
+		
+		return list;
+	}
+
 	/**
 	 * In a threadsafe way, add a new time feature definition
 	 * 
@@ -160,7 +188,7 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 * @param key of field to set to true
 	 * @return updated map of key/values
 	 */
-	private HashMap<String, Double> updateMap(HashMap<String, Double> map, int type) {
+	private HashMap<String, Boolean> updateMap(HashMap<String, Boolean> map, int type) {
 		int keyVal = this.cal.get(type);
 		
 		if(
@@ -172,11 +200,10 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 			
 		
 		String key = Integer.toString(keyVal);
-		if (map.get(Integer.parseInt(key)) != null) 
-			map.put(key, 1d);
-		else {
-			for(String keys : map.keySet())
-			System.out.println("'" + key.hashCode() + "': '" + keys.hashCode() + "' - " + map.get(keys) );
+		
+		if (map.get(key) != null) {
+			map.put(key, true);
+			
 		}
 			 
 		return map;
@@ -186,8 +213,8 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 * 
 	 * @return a binary feature list based on minutes in an hour
 	 */
-	public synchronized HashMap<String, Double> getMinuteList() {
-		HashMap<String, Double> arr = new HashMap<String, Double>();
+	public synchronized HashMap<String, Boolean> getMinuteList() {
+		HashMap<String, Boolean> arr = new HashMap<String, Boolean>();
 		arr.putAll(this.minutesDefault);
 		
 		return this.updateMap(arr, Calendar.MINUTE);
@@ -197,8 +224,8 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 * 
 	 * @return a binary feature list based on 24 hours in a day
 	 */
-	public synchronized HashMap<String, Double> getHourList() {
-		HashMap<String, Double> arr = new HashMap<String, Double>();
+	public synchronized HashMap<String, Boolean> getHourList() {
+		HashMap<String, Boolean> arr = new HashMap<String, Boolean>();
 		arr.putAll((this.hoursDefault));
 		
 		return this.updateMap(arr, Calendar.HOUR_OF_DAY);
@@ -208,8 +235,8 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 * 
 	 * @return a binary feature list based on 7 days in a week
 	 */
-	public synchronized HashMap<String, Double> getDayOfWeekList() {
-		HashMap<String, Double> arr = new HashMap<String, Double>();
+	public synchronized HashMap<String, Boolean> getDayOfWeekList() {
+		HashMap<String, Boolean> arr = new HashMap<String, Boolean>();
 		arr.putAll((this.dayOfWeekDefault));
 		
 		return this.updateMap(arr, Calendar.DAY_OF_WEEK);
@@ -224,9 +251,9 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 * 
 	 * @return day of the year binary feature list.
 	 */
-	public HashMap<String, Double> getDayOYearList() {
+	public HashMap<String, Boolean> getDayOYearList() {
 		
-		HashMap<String, Double> arr = new HashMap<String, Double>();
+		HashMap<String, Boolean> arr = new HashMap<String, Boolean>();
 		arr.putAll((this.dayOfYearDefault));
 		
 		return this.updateMap(arr, Calendar.DAY_OF_YEAR);
@@ -236,8 +263,8 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 	 * 
 	 * @return Binary vector of months
 	 */
-	public HashMap<String, Double> getMonthList() {
-		HashMap<String, Double> arr = new HashMap<String, Double>();
+	public HashMap<String, Boolean> getMonthList() {
+		HashMap<String, Boolean> arr = new HashMap<String, Boolean>();
 		arr.putAll((this.monthDefault));
 
 		return this.updateMap(arr, Calendar.MONTH);
