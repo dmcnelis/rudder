@@ -74,6 +74,12 @@ public class BinaryFeatureTest {
 	}
 	
 	@Test
+	public void testFalseAsZero() {
+		BinaryFeature b = new BinaryFeature("test", false);
+		assertEquals(0d, b.getFeatureValue(), .002);
+	}
+	
+	@Test
 	public void testCompareTo() {
 		BinaryFeature a = new BinaryFeature();
 		a.setFeatureName("a");

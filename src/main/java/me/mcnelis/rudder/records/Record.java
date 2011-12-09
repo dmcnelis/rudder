@@ -38,6 +38,16 @@ public abstract class Record implements Serializable, Cloneable, Comparable<Reco
 		this.features = features;
 	}
 	
+	public String toString() {
+		StringBuffer r = new StringBuffer();
+		r.append(this.key.toString());
+		r.append(": ");
+		r.append(this.features.toString());
+		r.append("\n");
+		
+		return r.toString();
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

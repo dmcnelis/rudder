@@ -54,6 +54,9 @@ public class FeatureList extends ArrayList<Feature> {
 		return false;
 	}
 
+	public synchronized ArrayList<String> getFeatureList() {
+		return this.features;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -86,7 +89,7 @@ public class FeatureList extends ArrayList<Feature> {
 				return false;
 			}
 		} else {
-			System.out.println("in featurelist equals");
+			
 			for(Feature f : this) {
 				int idx = other.getFeatureIndex(f.getFeatureName());
 				
@@ -96,4 +99,28 @@ public class FeatureList extends ArrayList<Feature> {
 		}
 		return true;
 	}
+	
+	public String toString() {
+		StringBuffer r = new StringBuffer();
+		for (Feature f : this) {
+			r.append(f.getFeatureName());
+			r.append(": " );
+			r.append(f.getFeatureValue());
+			r.append("\n");
+		}
+		return r.toString();
+		
+	}
+
+	public Feature getFeature(String featureName) {
+		for(Feature feature : this) {
+
+			if(feature.getFeatureName().equals(featureName)) {
+				return feature;
+
+			}
+		}
+		return null;
+	}
+	
 }

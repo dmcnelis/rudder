@@ -37,7 +37,7 @@ public class BinaryFeature extends Feature {
 	@Override
 	public Double getFeatureValue() {
 		
-		return this.isFeatureValue() ? (Double) 0d : 1d;
+		return this.isFeatureValue() ? (Double) 1d : 0d;
 		
 	}
 }

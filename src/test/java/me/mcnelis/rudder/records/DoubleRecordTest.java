@@ -95,5 +95,25 @@ public class DoubleRecordTest {
 		
 		assertFalse(r2.equals(r));
 	}
+	
+	@Test
+	public void testGetFeaturesDoubleArray() {
+		DoubleRecord r = new DoubleRecord();
+		r.setKey(15d);
+		FeatureList fl = new FeatureList();
+		
+		fl.add(new NumericFeature("b", 2));
+		fl.add(new NumericFeature("c", 3));
+		fl.add(new NumericFeature("a", 1));
+		fl.add(new NumericFeature("d", 4));
+		r.setFeatures(fl);
+		
+		double[] arr = {1d, 2d, 3d, 4d};
+		assertEquals(arr[0], r.getFeatures().getFeatureArray()[0], .002);
+		assertEquals(arr[1], r.getFeatures().getFeatureArray()[1], .002);
+		assertEquals(arr[2], r.getFeatures().getFeatureArray()[2], .002);
+		assertEquals(arr[3], r.getFeatures().getFeatureArray()[3], .002);
+		
+	}
 
 }
