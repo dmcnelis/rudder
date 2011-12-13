@@ -3,6 +3,9 @@ package me.mcnelis.rudder.records;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+
 import me.mcnelis.rudder.exceptions.IllegalRecordException;
 import me.mcnelis.rudder.features.BinaryFeature;
 import me.mcnelis.rudder.features.FeatureList;
@@ -298,5 +301,200 @@ public class RecordSetTest {
 		assertEquals(4, d.getN());
 		
 	}
+	
+	@Test
+	public void testFeaturesAndYsMatch() {
+		RecordSet rs= new RecordSet();
+		DoubleRecord dr = new DoubleRecord();
+		dr.setKey(1d);
+		FeatureList list = new FeatureList();
+		list.add(new BinaryFeature("test", true));
+		list.add(new NumericFeature("number", 1));
+		dr.setFeatures(list);
+		
+		DoubleRecord dr2 = new DoubleRecord();
+		dr2.setKey(2d);
+		FeatureList list2 = new FeatureList();
+		list2.add(new BinaryFeature("test", false));
+		list2.add(new NumericFeature("number", 2));
+		dr2.setFeatures(list2);
+		
+		
+		DoubleRecord dr3 = new DoubleRecord();
+		dr3.setKey(3d);
+		FeatureList list3 = new FeatureList();
+		list3.add(new BinaryFeature("test", true));
+		list3.add(new NumericFeature("number", 3));
+		dr3.setFeatures(list3);
+		
+		DoubleRecord dr4 = new DoubleRecord();
+		dr4.setKey(4d);
+		FeatureList list4 = new FeatureList();
+		list4.add(new BinaryFeature("test", false));
+		list4.add(new NumericFeature("number", 4));
+		dr4.setFeatures(list4);
+		
+		try {
+			rs.addAndCheck(dr);
+			rs.addAndCheck(dr2);
+			rs.addAndCheck(dr3);
+			rs.addAndCheck(dr4);
+		} catch (IllegalRecordException e) {
+			fail("Problem with the records!");
+		}
+		
+		double[] ys = rs.getYStatistics().getValues();
+		double[] xs = rs.getFeatureStatistics("number").getValues();
+		
+		assertEquals(ys[0], xs[0], .002);
+		assertEquals(ys[1], xs[1], .002);
+		assertEquals(ys[2], xs[2], .002);
+		assertEquals(ys[3], xs[3], .002);
+	}
+	
+	@Test
+	public void testGetRecordByKey() {
+		RecordSet rs= new RecordSet();
+		DoubleRecord dr = new DoubleRecord();
+		dr.setKey(1d);
+		FeatureList list = new FeatureList();
+		list.add(new BinaryFeature("test", true));
+		list.add(new NumericFeature("number", 1));
+		dr.setFeatures(list);
+		
+		DoubleRecord dr2 = new DoubleRecord();
+		dr2.setKey(2d);
+		FeatureList list2 = new FeatureList();
+		list2.add(new BinaryFeature("test", false));
+		list2.add(new NumericFeature("number", 2));
+		dr2.setFeatures(list2);
+		
+		
+		DoubleRecord dr3 = new DoubleRecord();
+		dr3.setKey(3d);
+		FeatureList list3 = new FeatureList();
+		list3.add(new BinaryFeature("test", true));
+		list3.add(new NumericFeature("number", 3));
+		dr3.setFeatures(list3);
+		
+		DoubleRecord dr4 = new DoubleRecord();
+		dr4.setKey(4d);
+		FeatureList list4 = new FeatureList();
+		list4.add(new BinaryFeature("test", false));
+		list4.add(new NumericFeature("number", 4));
+		dr4.setFeatures(list4);
+		
+		try {
+			rs.addAndCheck(dr);
+			rs.addAndCheck(dr2);
+			rs.addAndCheck(dr3);
+			rs.addAndCheck(dr4);
+		} catch (IllegalRecordException e) {
+			fail("Problem with the records!");
+		}
+		ArrayList<Record> recs = rs.getRecordsByKey(3d);
+		
+		assertEquals(3d, recs.get(0).getFeatures().getFeature("number").getFeatureValue(), .002);
+
+	}
+	
+	@Test
+	public void testGetRecordsByKey() {
+		RecordSet rs= new RecordSet();
+		DoubleRecord dr = new DoubleRecord();
+		dr.setKey(1d);
+		FeatureList list = new FeatureList();
+		list.add(new BinaryFeature("test", true));
+		list.add(new NumericFeature("number", 1));
+		dr.setFeatures(list);
+		
+		DoubleRecord dr2 = new DoubleRecord();
+		dr2.setKey(3d);
+		FeatureList list2 = new FeatureList();
+		list2.add(new BinaryFeature("test", false));
+		list2.add(new NumericFeature("number", 2));
+		dr2.setFeatures(list2);
+		
+		
+		DoubleRecord dr3 = new DoubleRecord();
+		dr3.setKey(3d);
+		FeatureList list3 = new FeatureList();
+		list3.add(new BinaryFeature("test", true));
+		list3.add(new NumericFeature("number", 3));
+		dr3.setFeatures(list3);
+		
+		DoubleRecord dr4 = new DoubleRecord();
+		dr4.setKey(4d);
+		FeatureList list4 = new FeatureList();
+		list4.add(new BinaryFeature("test", false));
+		list4.add(new NumericFeature("number", 4));
+		dr4.setFeatures(list4);
+		
+		try {
+			rs.addAndCheck(dr);
+			rs.addAndCheck(dr2);
+			rs.addAndCheck(dr3);
+			rs.addAndCheck(dr4);
+		} catch (IllegalRecordException e) {
+			fail("Problem with the records!");
+		}
+		ArrayList<Record> recs = rs.getRecordsByKey(3d);
+		assertEquals(2, recs.size());
+		for(Record rec : recs) {
+			if(rec.getFeatures().getFeature("test").getFeatureValue() == 0)
+				assertEquals(2d, recs.get(0).getFeatures().getFeature("number").getFeatureValue(), .002);
+			else 
+				assertEquals(3d, rec.getFeatures().getFeature("number").getFeatureValue(), .002);
+		}
+		
+
+	}
+	
+	@Test
+	public void testGetValidatedRecords() {
+		RecordSet rs= new RecordSet();
+		DoubleRecord dr = new DoubleRecord();
+		dr.setKey(1d);
+		FeatureList list = new FeatureList();
+		list.add(new BinaryFeature("test", true));
+		list.add(new NumericFeature("number", 1));
+		dr.setFeatures(list);
+		
+		DoubleRecord dr2 = new DoubleRecord();
+		dr2.setKey(3d);
+		FeatureList list2 = new FeatureList();
+		list2.add(new BinaryFeature("test", false));
+		list2.add(new NumericFeature("number", Double.NaN));
+		dr2.setFeatures(list2);
+		
+		
+		DoubleRecord dr3 = new DoubleRecord();
+		dr3.setKey(3d);
+		FeatureList list3 = new FeatureList();
+		list3.add(new BinaryFeature("test", true));
+		list3.add(new NumericFeature("number", Double.NEGATIVE_INFINITY));
+		dr3.setFeatures(list3);
+		
+		DoubleRecord dr4 = new DoubleRecord();
+		dr4.setKey(4d);
+		FeatureList list4 = new FeatureList();
+		list4.add(new BinaryFeature("test", false));
+		list4.add(new NumericFeature("number", 4));
+		dr4.setFeatures(list4);
+		
+		try {
+			rs.addAndCheck(dr);
+			rs.addAndCheck(dr2);
+			rs.addAndCheck(dr3);
+			rs.addAndCheck(dr4);
+		} catch (IllegalRecordException e) {
+			fail("Problem with the records!");
+		}
+		
+		assertEquals(2, rs.getFeatureStatistics("number").getN());
+		assertEquals(2, rs.getYStatistics().getN());
+
+	}
+
 
 }

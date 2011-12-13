@@ -2,6 +2,7 @@ package me.mcnelis.rudder.records;
 
 import java.io.Serializable;
 
+import me.mcnelis.rudder.features.Feature;
 import me.mcnelis.rudder.features.FeatureList;
 
 public abstract class Record implements Serializable, Cloneable, Comparable<Record>{
@@ -12,6 +13,8 @@ public abstract class Record implements Serializable, Cloneable, Comparable<Reco
 	
 	protected Object key;
 	protected FeatureList features;
+	protected Boolean valid;
+	
 	/**
 	 * @return the key
 	 */
@@ -94,6 +97,20 @@ public abstract class Record implements Serializable, Cloneable, Comparable<Reco
 		return true;
 	}
 	
+	public Boolean validate() {
+		this.valid = true;
+		for (Feature f : this.features) {
+			if (Double.isNaN(f.getFeatureValue()) || Double.isInfinite(f.getFeatureValue())) {
+				this.valid = false;
+			}
+		}
+		return this.valid;
+	}
 	
+	public Boolean isValid() {
+		if(this.valid == null)
+			this.validate();
+		return this.valid;
+	}
 	
 }

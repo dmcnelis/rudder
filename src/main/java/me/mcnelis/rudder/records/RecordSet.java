@@ -1,8 +1,8 @@
 package me.mcnelis.rudder.records;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
 import me.mcnelis.rudder.exceptions.IllegalRecordException;
@@ -78,10 +78,12 @@ public class RecordSet extends HashSet<Record> implements RecordCollection {
 	 */
 	public synchronized DoubleMatrix getDoubleMatrix() {
 		DoubleMatrix matrix = new DoubleMatrix();
-
+		
 		for(Record r : this) {
+			
 			if (r instanceof DoubleRecord) {
-				matrix.addValues((Double)r.getKey(), r.getFeatures().getFeatureArray());
+				if(r.isValid())
+					matrix.addValues((Double)r.getKey(), r.getFeatures().getFeatureArray());
 			}
 		}
 		
@@ -97,7 +99,8 @@ public class RecordSet extends HashSet<Record> implements RecordCollection {
 			DescriptiveStatistics stat = new DescriptiveStatistics();
 			
 			for (Record r : this) {
-				stat.addValue(r.getFeatures().getFeature(featureName).getFeatureValue());
+				if(r.isValid())
+					stat.addValue(r.getFeatures().getFeature(featureName).getFeatureValue());
 			}
 			
 			return stat;
@@ -110,9 +113,27 @@ public class RecordSet extends HashSet<Record> implements RecordCollection {
 	public synchronized DescriptiveStatistics getYStatistics() {
 		DescriptiveStatistics d = new DescriptiveStatistics();
 		for (Record r : this) {
-			d.addValue((Double)r.getKey());
+			if(r.isValid())
+				d.addValue((Double)r.getKey());
 		}
 		return d;
 	}
 
+	/**
+	 * This is going to be a problem method with larger datasets, will 
+	 * probably want to have a different class if you're expecting to do
+	 * this sort of behavior regularly
+	 * @param key
+	 * @return records matching that key
+	 */
+	public synchronized ArrayList<Record> getRecordsByKey(Object key) {
+		ArrayList<Record> records = new ArrayList<Record>();
+		
+		for(Record r : this) {
+			if(r.getKey().equals(key))
+				records.add(r);
+		}
+		
+		return records;
+	}
 }
