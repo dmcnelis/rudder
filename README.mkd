@@ -12,9 +12,10 @@ that is not, please post an issue, a patch, or a unit test illustrating
 the issue.
 
 Example of running clustering
-```java
+`java
 
 class MyRecordClass extends Record {
+
 	@Feature
 	double myFeature1
 	@Feature
@@ -50,4 +51,4 @@ class MyClusterRunner {
 		}
 	}
 }
-```
+`
