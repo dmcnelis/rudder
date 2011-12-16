@@ -23,9 +23,13 @@ public class DBScanTest {
 					r.setFeature("feature1",1*j + i*.0000001);
 					r.setFeature("feature2", 1*j+ i*.0000001);
 					r.setFeature("feature3", 1*j+ i*.0000001);
+					r.setLabel("stringLabel", "label");
 				} catch (FeatureNotFoundException e) {
 					e.printStackTrace();
 					fail("Should not have  exception");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				
 				list.add(r);

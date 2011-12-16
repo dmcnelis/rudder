@@ -32,14 +32,7 @@ public class KMeansTest {
 		
 		KMeans k = new KMeans(3, list);
 		ArrayList<Cluster> clusters = k.cluster();
-		for(Cluster c : clusters) {
-			System.out.println(
-					c.getCentroid()[0] + "\n"
-					+ c.getCentroid()[1] + "\n"
-					+ c.getCentroid()[2] + "\n"
-					);
-			
-		}
+		assertTrue(true);
 	}
 
 }

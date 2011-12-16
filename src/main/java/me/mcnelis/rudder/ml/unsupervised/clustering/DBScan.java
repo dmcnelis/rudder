@@ -12,7 +12,7 @@ public class DBScan extends DensityBased {
 
 	@Override
 	protected ArrayList<Cluster> cluster() {
-System.out.println("Size: " + this.sourceData.size());
+
 		for (Record r : this.sourceData) {
 			if (!r.isVisited()) {
 				r.setVisited();

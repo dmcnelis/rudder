@@ -41,7 +41,7 @@ public class RecordList extends ArrayList<Record> {
 		double[] d = new double[this.size()];
 		int cnt=0;
 		for (Record r : this) {
-			d[cnt] = r.getLabel();
+			d[cnt] = r.getDoubleLabel();
 			cnt++;
 		}
 		

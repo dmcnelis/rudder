@@ -155,10 +155,9 @@ public abstract class Record {
 				annotation = f.getAnnotation(Label.class);
 			if (annotation != null) {
 				try {
-					arr.addElement(f.getDouble(this));
+						arr.addElement(f.getDouble(this));
 				} catch (IllegalArgumentException e) {
-					
-					e.printStackTrace();
+					//Field or label isn't a double, so ignore it
 				} catch (IllegalAccessException e) {
 					
 					e.printStackTrace();
@@ -169,7 +168,7 @@ public abstract class Record {
 		return arr.getElements();
 	}
 	
-	public double getLabel() {
+	public double getDoubleLabel() {
 		
 		Field[] fields = this.getClass().getDeclaredFields();
 		for(Field f : fields) {
@@ -179,8 +178,7 @@ public abstract class Record {
 				try {
 					return (f.getDouble(this));
 				} catch (IllegalArgumentException e) {
-					
-					e.printStackTrace();
+					//Not a double, so just move forward
 				} catch (IllegalAccessException e) {
 					
 					e.printStackTrace();

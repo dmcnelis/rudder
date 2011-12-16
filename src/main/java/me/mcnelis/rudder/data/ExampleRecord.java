@@ -15,4 +15,7 @@ public class ExampleRecord extends Record {
 	
 	@Label
 	protected double doubleLabel;
+	
+	@Label
+	protected  String stringLabel;
 }
