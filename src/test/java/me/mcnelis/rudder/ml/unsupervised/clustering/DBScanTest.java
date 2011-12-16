@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import me.mcnelis.rudder.data.ExampleRecord;
+import me.mcnelis.rudder.data.MockRecord;
 import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.collections.RecordList;
 import me.mcnelis.rudder.exceptions.FeatureNotFoundException;
@@ -18,7 +18,7 @@ public class DBScanTest {
 		RecordList list = new RecordList();
 		for(int j=0; j<50; j=j+10) {
 			for (int i=0; i<10; i++) {
-				Record r = new ExampleRecord();
+				Record r = new MockRecord();
 				try {
 					r.setFeature("feature1",1*j + i*.0000001);
 					r.setFeature("feature2", 1*j+ i*.0000001);

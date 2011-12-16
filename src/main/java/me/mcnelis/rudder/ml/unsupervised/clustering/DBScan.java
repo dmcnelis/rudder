@@ -18,7 +18,7 @@ public class DBScan extends DensityBased {
 				r.setVisited();
 				Cluster c = this.rangeQuery(r);
 				
-				if (c.getElements().size() < this.minPts) {
+				if (c.getRecords().size() < this.minPts) {
 					
 					r.setIsNoise();
 					
@@ -39,11 +39,11 @@ public class DBScan extends DensityBased {
 		
 		newCluster.addRecord(r);
 		
-		for (Record rPrime : c.getElements()) {
+		for (Record rPrime : c.getRecords()) {
 			if (!rPrime.isVisited()) {
 				rPrime.setVisited();
 				Cluster cluster = this.rangeQuery(rPrime);
-				if (cluster.getElements().size() >= this.minPts) {
+				if (cluster.getRecords().size() >= this.minPts) {
 					
 					cluster.combineClusters(this.expandCluster(rPrime, cluster));
 					

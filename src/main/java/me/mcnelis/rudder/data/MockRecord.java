@@ -1,6 +1,6 @@
 package me.mcnelis.rudder.data;
 
-public class ExampleRecord extends Record {
+public class MockRecord extends Record {
 	
 	@Feature
 	protected double feature1;

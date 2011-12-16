@@ -2,14 +2,25 @@ package me.mcnelis.rudder.data;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashSet;
+
+import me.mcnelis.rudder.exceptions.FeatureNotFoundException;
 
 import org.apache.commons.math.util.MathUtils;
 import org.apache.commons.math.util.ResizableDoubleArray;
 
-import me.mcnelis.rudder.exceptions.FeatureNotFoundException;
-
+/**
+ * Base class that records in a dataset should extend.
+ * 
+ * This provides all the necessary functions to, assuming the 
+ * features and  labels are properly annotated fields, to
+ * perform any of the machine learning tasks included in 
+ * this package.
+ * 
+ * 
+ * @author dmcnelis
+ *
+ */
 public abstract class Record {
 	
 	protected HashSet<RecordFlags> flags;

@@ -6,11 +6,11 @@ import me.mcnelis.rudder.exceptions.FeatureNotFoundException;
 
 import org.junit.Test;
 
-public class ExampleRecordTest {
+public class MockRecordTest {
 
 	@Test
 	public void testSetFeature() {
-		ExampleRecord r = new  ExampleRecord();
+		MockRecord r = new  MockRecord();
 		try {
 			assertTrue(r.setFeature("feature1", 4d));
 		} catch (FeatureNotFoundException e) {
@@ -21,7 +21,7 @@ public class ExampleRecordTest {
 	
 	@Test
 	public void testSetFeatureFailureNonFeature() {
-		ExampleRecord r = new  ExampleRecord();
+		MockRecord r = new  MockRecord();
 		try {
 			r.setFeature("nonFeature", 4d);
 		} catch (FeatureNotFoundException e) {
@@ -31,7 +31,7 @@ public class ExampleRecordTest {
 	
 	@Test
 	public void testSetFeatureNoField() {
-		ExampleRecord r = new  ExampleRecord();
+		MockRecord r = new  MockRecord();
 		try {
 			r.setFeature("bogusFeature", 4d);
 		} catch (FeatureNotFoundException e) {
@@ -41,7 +41,7 @@ public class ExampleRecordTest {
 	
 	@Test
 	public void testSetLabel() {
-		ExampleRecord r = new  ExampleRecord();
+		MockRecord r = new  MockRecord();
 		
 			try {
 				assertTrue(r.setLabel("doubleLabel", 4d));
@@ -53,7 +53,7 @@ public class ExampleRecordTest {
 
 	@Test
 	public void testGetFeatureArray() {
-		ExampleRecord r = new ExampleRecord();
+		MockRecord r = new MockRecord();
 		try {
 			r.setFeature("feature1", 1d);
 			r.setFeature("feature2", 2d);

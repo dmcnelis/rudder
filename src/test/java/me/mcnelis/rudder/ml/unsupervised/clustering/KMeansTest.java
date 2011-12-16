@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import me.mcnelis.rudder.data.ExampleRecord;
+import me.mcnelis.rudder.data.MockRecord;
 import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.collections.RecordList;
 import me.mcnelis.rudder.exceptions.FeatureNotFoundException;
@@ -17,7 +17,7 @@ public class KMeansTest {
 	public void testClustering() {
 		RecordList list = new RecordList();
 		for (int i=0; i<10000; i++) {
-			Record r = new ExampleRecord();
+			Record r = new MockRecord();
 			try {
 				r.setFeature("feature1", Math.pow(i,2)*3.2d);
 				r.setFeature("feature2", Math.pow(i,3)/2.3d);

@@ -8,30 +8,36 @@ import me.mcnelis.rudder.data.collections.RecordList;
 
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
-public class Cluster {
+/**
+ * Specialized RecordList for housing and performing
+ * operations within a cluster (i.e. holding a centroid
+ * 
+ * @author dmcnelis
+ *
+ */
+public class Cluster extends RecordList{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected double[] centroid;
-	protected RecordList elements = new RecordList();
 	
 	public Cluster() {}
 	
 	
 	public void addRecord(Record r) {
-		this.elements.add(r);
+		this.add(r);
 		
 	}
 	
 	public void combineClusters(Cluster c) {
-		for(Record r : c.getElements())
-			if(!this.elements.contains(r))
-				this.elements.add(r);
+		for(Record r : c.getRecords())
+			if(!this.contains(r))
+				this.add(r);
 	}
 	
-	public RecordList getElements() {
-		return this.elements;
-	}
-	
-	public void setElements(RecordList elements) {
-		this.elements = elements;
+	public RecordList getRecords() {
+		return this;
 	}
 	
 	public double[] getCentroid() {
@@ -45,12 +51,19 @@ public class Cluster {
 		this.centroid = d;
 	}
 	
+	/**
+	 * Cycles through elements in the list to average each element
+	 * against the other records to create a centroid used in some
+	 * forms of clustering algorithms.
+	 * 
+	 * @return double array representing centroid
+	 */
 	protected synchronized double[] calculateCentroid() {
 		
-		this.centroid = new double[this.elements.get(0).getFeatureAndLabelArray().length];
+		this.centroid = new double[this.get(0).getFeatureAndLabelArray().length];
 		
 		ArrayList<DescriptiveStatistics> stats = new  ArrayList<DescriptiveStatistics>();
-		for (Record elem : this.elements) {
+		for (Record elem : this) {
 			double[] arr = elem.getFeatureAndLabelArray();
 			for (int i=0; i<arr.length; i++) {
 				
@@ -82,8 +95,7 @@ public class Cluster {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(centroid);
-		result = prime * result
-				+ ((elements == null) ? 0 : elements.hashCode());
+		result = prime * result;
 		return result;
 	}
 
@@ -105,13 +117,7 @@ public class Cluster {
 		if (!Arrays.equals(centroid, other.centroid)) {
 			return false;
 		}
-		if (elements == null) {
-			if (other.elements != null) {
-				return false;
-			}
-		} else if (!elements.equals(other.elements)) {
-			return false;
-		}
+		
 		return true;
 	}
 }
