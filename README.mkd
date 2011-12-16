@@ -12,38 +12,36 @@ that is not, please post an issue, a patch, or a unit test illustrating
 the issue.
 
 Example of running clustering
-`java
 
-class MyRecordClass extends Record {
-	@Feature
-	double myFeature1
-	@Feature
-	double myFeature2
-	@Feature
-	double myFeature3
-	@Label
-	String myLabel;	
-	Object nonFeatureItem;
-	String nonFeatureOrLabelString;
-	//Other stuff I want to do
-}
-`
-`
-class MyClusterRunner {
-	public static void main(String[] args) {
-		double epsilon = 4d;  //Maximum distance between records in a cluster
-		int minClusterSize = 3;  //Minimum number of records in a cluster
-		RecordList myRecords = new RecordList();
-		//populate your object	
-		DBScan dbscan = new DBScan(epsilon, minClusterSize);
-		db.setSourceData(list);
-		ArrayList<Cluster> clusters = db.getClusters();	
-		//do stuff with your clusters i.e. print record label and cluster
-		for(int i=0; i<clusters.size(); i++) {
-			for(MyRecordClass r : clusters.getElements()) {
-				System.out.println("Cluster " + i+ ": " + r.getLabel());
+
+	class MyRecordClass extends Record {
+		@Feature
+		double myFeature1
+		@Feature
+		double myFeature2
+		@Feature
+		double myFeature3
+		@Label
+		String myLabel;	
+		Object nonFeatureItem;
+		String nonFeatureOrLabelString;
+		//Other stuff I want to do
+	}
+
+	class MyClusterRunner {
+		public static void main(String[] args) {
+			double epsilon = 4d;  //Maximum distance between records in a cluster
+			int minClusterSize = 3;  //Minimum number of records in a cluster
+			RecordList myRecords = new RecordList();
+			//populate your object	
+			DBScan dbscan = new DBScan(epsilon, minClusterSize);
+			db.setSourceData(list);
+			ArrayList<Cluster> clusters = db.getClusters();	
+			//do stuff with your clusters i.e. print record label and cluster
+			for(int i=0; i<clusters.size(); i++) {
+				for(MyRecordClass r : clusters.getElements()) {
+					System.out.println("Cluster " + i+ ": " + r.getLabel());
+				}
 			}
 		}
 	}
-}
-`
