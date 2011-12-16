@@ -1,9 +1,11 @@
-Rudder is a meant to provide a framework to help make it easier
-to apply machine learning techniques to your data.
+Rudder is a meant to provide a machine learning framework and 
+package.  Using rudder you can extend a base record class and
+use annotations to define your features and labels, then pass
+those records into an analytics algorithm without having to 
+write any additional connectors.
 
-The first few iterations will be mostly utility based in order to 
-provide ways to massage a dataset into a set of data that can 
-then have statistical analysis performed on it.
+There will also be a few utilities that will come in and out of 
+existence as this project grows and is refined.
 
 Everything in this framework should be thread safe, if you find something
 that is not, please post an issue, a patch, or a unit test illustrating

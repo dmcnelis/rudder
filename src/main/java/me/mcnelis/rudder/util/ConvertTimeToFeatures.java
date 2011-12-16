@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import me.mcnelis.rudder.exceptions.ConvertTimeToFeaturesDataTypeException;
-import me.mcnelis.rudder.features.BinaryFeature;
-import me.mcnelis.rudder.features.FeatureList;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -115,13 +113,18 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 		}
 	}
 	
+	public ArrayList<Double> run(Calendar c) {
+		this.cal = c;
+		return this.run();
+	}
+	
 	/**
 	 * Runs based on options that are set
 	 * 
-	 * @TODO update to return a FeatureList populated with Binary Features!
+	 * @TODO update to return a ArrayList<Double> populated with Binary Features!
 	 */
-	public FeatureList run() {
-		FeatureList result = new FeatureList();
+	public ArrayList<Double> run() {
+		ArrayList<Double> result = new ArrayList<Double>();
 		
 		for (TimeFeatures t : this.featureList) {
 			switch (t) {
@@ -141,24 +144,11 @@ public class ConvertTimeToFeatures implements ConvertToFeatures {
 		return result;
 	}
 	
-	private FeatureList buildFeatureSet(HashMap<String, Boolean> result, TimeFeatures t) {
-		String keyBase = "";
-		switch (t) {
-		case MINUTE:
-			keyBase = "Minute ";
-		case HOUR:
-			keyBase = "Hour ";
-		case MONTH :
-			keyBase = "Month ";
-		case DAY_OF_YEAR: 
-			keyBase = "Day of year ";
-		case DAY_OF_WEEK : 
-			keyBase = "Day of week ";
-		}
+	private ArrayList<Double> buildFeatureSet(HashMap<String, Boolean> result, TimeFeatures t) {
 		
-		FeatureList list = new FeatureList();
+		ArrayList<Double> list = new ArrayList<Double>();
 		for (String key : result.keySet()) {
-			list.add(new BinaryFeature(keyBase + key, result.get(key)));
+			list.add(result.get(key) ? 1d : 0d);
 		}
 		
 		return list;
