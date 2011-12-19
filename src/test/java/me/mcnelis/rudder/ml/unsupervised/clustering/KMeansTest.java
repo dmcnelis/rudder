@@ -1,9 +1,7 @@
 package me.mcnelis.rudder.ml.unsupervised.clustering;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import me.mcnelis.rudder.data.MockRecord;
 import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.collections.RecordList;
@@ -31,7 +29,7 @@ public class KMeansTest {
 		}
 		
 		KMeans k = new KMeans(3, list);
-		ArrayList<Cluster> clusters = k.cluster();
+		k.cluster();
 		assertTrue(true);
 	}
 

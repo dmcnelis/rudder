@@ -21,17 +21,12 @@ import org.apache.commons.math.util.ResizableDoubleArray;
  * @author dmcnelis
  *
  */
-public abstract class Record {
+public abstract class Record implements RecordInterface {
 	
 	protected HashSet<RecordFlags> flags;
 	
-	/**
-	 * Set a feature variable for a class, currently all
-	 * features must be double
-	 * @param featureName
-	 * @param d
-	 * @return
-	 * @throws FeatureNotFoundException
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#setFeature(java.lang.String, double)
 	 */
 	public boolean setFeature(String featureName, double d) 
 			throws FeatureNotFoundException {
@@ -64,6 +59,9 @@ public abstract class Record {
 		throw new FeatureNotFoundException("Field is not a feature");
 	}
 	
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#setLabel(java.lang.String, java.lang.Object)
+	 */
 	public boolean setLabel(String labelName, Object o) throws Exception {
 		
 		Field f = null;
@@ -89,6 +87,9 @@ public abstract class Record {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#toString()
+	 */
 	@Override
 	public String toString() {
 		
@@ -117,9 +118,8 @@ public abstract class Record {
 		return sb.toString();
 	}
 	
-	/**
-	 * 
-	 * @return double array of features for processing
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#getFeatureArray()
 	 */
 	public double[] getFeatureArray() {
 		ResizableDoubleArray arr = new ResizableDoubleArray();
@@ -143,18 +143,8 @@ public abstract class Record {
 		return arr.getElements();
 	}
 	
-	/**
-	 * In unsupervised learning the order of your features is irrelevant
-	 * so it doesn't matter what you're going through, as long as the label
-	 * is a number.  
-	 * 
-	 * If your label is a string, you should handle labeling your data in a little
-	 * different manner (i.e. give your label a double value type and have your
-	 * label be another class member.  When you set that class member, it updates
-	 * the label).  This is irrelevant if you're not planning on doing any 
-	 * unsupervised learning on this  dataset
-	 * 
-	 * @return array of all your feature and labels  for unsupervised learning
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#getFeatureAndLabelArray()
 	 */
 	public double[] getFeatureAndLabelArray() {
 		ResizableDoubleArray arr = new ResizableDoubleArray();
@@ -179,6 +169,9 @@ public abstract class Record {
 		return arr.getElements();
 	}
 	
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#getDoubleLabel()
+	 */
 	public double getDoubleLabel() {
 		
 		Field[] fields = this.getClass().getDeclaredFields();
@@ -199,6 +192,9 @@ public abstract class Record {
 		return Double.NaN;
 	}
 	
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#isNoise()
+	 */
 	public boolean isNoise() {
 		if(this.flags == null)
 			return false;
@@ -210,6 +206,9 @@ public abstract class Record {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#setNoise(boolean)
+	 */
 	public void setNoise(boolean noise) {
 		if(this.flags == null)
 			this.flags = new HashSet<RecordFlags>();
@@ -219,22 +218,9 @@ public abstract class Record {
 			this.flags.remove(RecordFlags.NOISE);
 	}
 	
-	public void setIsNoise() {
-		if(this.flags == null)
-			this.flags = new HashSet<RecordFlags>();
-
-		this.flags.add(RecordFlags.NOISE);
-
-	}
-	
-	public void setNotNoise() {
-		if(this.flags == null)
-			this.flags = new HashSet<RecordFlags>();
-
-		this.flags.remove(RecordFlags.NOISE);
-
-	}
-	
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#isVisited()
+	 */
 	public boolean isVisited() {
 		if(this.flags == null)
 			return false;
@@ -246,6 +232,9 @@ public abstract class Record {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#setVisited(boolean)
+	 */
 	public void setVisited(boolean visited) {
 		if(this.flags == null)
 			this.flags = new HashSet<RecordFlags>();
@@ -255,20 +244,9 @@ public abstract class Record {
 			this.flags.remove(RecordFlags.VISITED);
 	}
 	
-	public void setNotVisited() {
-		if(this.flags == null)
-			this.flags = new HashSet<RecordFlags>();
-		if(this.flags.contains(RecordFlags.VISITED))
-			this.flags.remove(RecordFlags.VISITED);
-	}
-	
-	public void setVisited() {
-		if(this.flags == null)
-			this.flags = new HashSet<RecordFlags>();
-		
-		this.flags.add(RecordFlags.VISITED);
-	}
-	
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#setAssigned(boolean)
+	 */
 	public void setAssigned(boolean visited) {
 		if(this.flags == null)
 			this.flags = new HashSet<RecordFlags>();
@@ -276,22 +254,11 @@ public abstract class Record {
 			this.flags.add(RecordFlags.ASSIGNED);
 		else if (!visited)
 			this.flags.remove(RecordFlags.ASSIGNED);
-	}
+	}	
 	
-	public void setNotAssigned() {
-		if(this.flags == null)
-			this.flags = new HashSet<RecordFlags>();
-		if(this.flags.contains(RecordFlags.ASSIGNED))
-			this.flags.remove(RecordFlags.ASSIGNED);
-	}
-	
-	public void setAssigned() {
-		if(this.flags == null)
-			this.flags = new HashSet<RecordFlags>();
-		
-		this.flags.add(RecordFlags.ASSIGNED);
-	}
-	
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#isAssigned()
+	 */
 	public boolean isAssigned() {
 		if(this.flags.contains(RecordFlags.ASSIGNED))
 			return true;
@@ -299,6 +266,9 @@ public abstract class Record {
 			return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -307,6 +277,9 @@ public abstract class Record {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see me.mcnelis.rudder.data.RecordInterface#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -315,7 +288,7 @@ public abstract class Record {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Record other = (Record) obj;
+		RecordInterface other = (RecordInterface) obj;
 		double[] orig = this.getFeatureAndLabelArray();
 		double[] test = other.getFeatureAndLabelArray();
 		return MathUtils.equals(orig, test);

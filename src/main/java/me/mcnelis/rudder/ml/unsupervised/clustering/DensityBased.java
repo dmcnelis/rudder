@@ -2,18 +2,18 @@ package me.mcnelis.rudder.ml.unsupervised.clustering;
 
 import java.util.ArrayList;
 
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
-import org.apache.commons.math.util.MathUtils;
-
 import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.collections.RecordList;
+
+import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
+import org.apache.commons.math.util.MathUtils;
 
 public abstract class DensityBased {
 
 	protected double epsilon;
 	protected int minPts;
 	protected int minClusters;
-	protected DescriptiveStatistics distance = new DescriptiveStatistics();
+	protected SynchronizedSummaryStatistics distance = new SynchronizedSummaryStatistics();
 	protected ArrayList<Cluster> clusters;
 	protected RecordList sourceData;
 	
@@ -63,7 +63,7 @@ public abstract class DensityBased {
 				this.distance.addValue(distance);
 				
 				if (distance < this.epsilon ) {	
-					r2.setNotNoise();
+					r2.setNoise(false);
 					
 					c.addRecord(r2);
 				}
@@ -80,7 +80,7 @@ public abstract class DensityBased {
 	public double getMeanDistance() {
 		return this.distance.getMean();
 	}
-	public DescriptiveStatistics getDistanceStats() {
+	public SynchronizedSummaryStatistics getDistanceStats() {
 		return this.distance;
 	}
 	public RecordList getSourceData() {

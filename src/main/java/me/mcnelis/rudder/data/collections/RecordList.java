@@ -3,6 +3,7 @@ package me.mcnelis.rudder.data.collections;
 import java.util.ArrayList;
 
 import me.mcnelis.rudder.data.Record;
+import me.mcnelis.rudder.data.RecordInterface;
 
 public class RecordList extends ArrayList<Record> {
 
@@ -20,7 +21,7 @@ public class RecordList extends ArrayList<Record> {
 	public double[][] getUnsupervisedDoubleDoubleArray() {
 		double[][] d = new double[this.size()][];
 		int cnt=0;
-		for (Record r : this) {
+		for (RecordInterface r : this) {
 			d[cnt] = r.getFeatureAndLabelArray();
 			cnt++;
 		}
@@ -30,7 +31,7 @@ public class RecordList extends ArrayList<Record> {
 	public double[][] getSupervisedFeatures() {
 		double[][] d = new double[this.size()][];
 		int cnt=0;
-		for (Record r : this) {
+		for (RecordInterface r : this) {
 			d[cnt] = r.getFeatureArray();
 			cnt++;
 		}
@@ -40,7 +41,7 @@ public class RecordList extends ArrayList<Record> {
 	public double[] getSupervisedLabels() {
 		double[] d = new double[this.size()];
 		int cnt=0;
-		for (Record r : this) {
+		for (RecordInterface r : this) {
 			d[cnt] = r.getDoubleLabel();
 			cnt++;
 		}

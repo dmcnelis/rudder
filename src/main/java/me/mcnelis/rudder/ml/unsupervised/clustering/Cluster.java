@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import me.mcnelis.rudder.data.Record;
+import me.mcnelis.rudder.data.RecordInterface;
 import me.mcnelis.rudder.data.collections.RecordList;
 
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
 
 /**
  * Specialized RecordList for housing and performing
@@ -62,17 +63,17 @@ public class Cluster extends RecordList{
 		
 		this.centroid = new double[this.get(0).getFeatureAndLabelArray().length];
 		
-		ArrayList<DescriptiveStatistics> stats = new  ArrayList<DescriptiveStatistics>();
-		for (Record elem : this) {
+		ArrayList<SynchronizedSummaryStatistics> stats = new  ArrayList<SynchronizedSummaryStatistics>();
+		for (RecordInterface elem : this) {
 			double[] arr = elem.getFeatureAndLabelArray();
 			for (int i=0; i<arr.length; i++) {
 				
-				DescriptiveStatistics stat;
+				SynchronizedSummaryStatistics stat;
 				try {
 					stat = stats.get(i);
 				} catch (IndexOutOfBoundsException aiobe) {
 					
-					stat = new DescriptiveStatistics();
+					stat = new SynchronizedSummaryStatistics();
 					stats.add(i, stat);
 				}
 				stat.addValue(arr[i]);

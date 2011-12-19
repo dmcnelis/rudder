@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
-import org.apache.commons.math.util.MathUtils;
-
 import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.collections.RecordList;
+
+import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
+import org.apache.commons.math.util.MathUtils;
 
 public class KMeans implements Serializable{
 	
@@ -52,7 +52,7 @@ public class KMeans implements Serializable{
 	}
 	
 	protected boolean keepClustering() {
-		DescriptiveStatistics distanceStats = new DescriptiveStatistics();
+		SynchronizedSummaryStatistics distanceStats = new SynchronizedSummaryStatistics();
 		if (this.previousCenters == null) {
 			this.previousCenters = new double[this.clusters.size()][];
 			this.assignPreviousClusters();
