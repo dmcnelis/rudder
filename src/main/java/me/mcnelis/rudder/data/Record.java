@@ -28,7 +28,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#setFeature(java.lang.String, double)
 	 */
-	public boolean setFeature(String featureName, double d) 
+	public synchronized boolean setFeature(String featureName, double d) 
 			throws FeatureNotFoundException {
 		
 		Field f = null;
@@ -62,7 +62,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#setLabel(java.lang.String, java.lang.Object)
 	 */
-	public boolean setLabel(String labelName, Object o) throws Exception {
+	public synchronized boolean setLabel(String labelName, Object o) throws Exception {
 		
 		Field f = null;
 		try {
@@ -121,7 +121,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#getFeatureArray()
 	 */
-	public double[] getFeatureArray() {
+	public synchronized double[] getFeatureArray() {
 		ResizableDoubleArray arr = new ResizableDoubleArray();
 		
 		Field[] fields = this.getClass().getDeclaredFields();
@@ -146,7 +146,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#getFeatureAndLabelArray()
 	 */
-	public double[] getFeatureAndLabelArray() {
+	public synchronized double[] getFeatureAndLabelArray() {
 		ResizableDoubleArray arr = new ResizableDoubleArray();
 		
 		Field[] fields = this.getClass().getDeclaredFields();
@@ -172,7 +172,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#getDoubleLabel()
 	 */
-	public double getDoubleLabel() {
+	public synchronized double getDoubleLabel() {
 		
 		Field[] fields = this.getClass().getDeclaredFields();
 		for(Field f : fields) {
@@ -195,7 +195,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#isNoise()
 	 */
-	public boolean isNoise() {
+	public synchronized boolean isNoise() {
 		if(this.flags == null)
 			return false;
 		else {
@@ -209,7 +209,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#setNoise(boolean)
 	 */
-	public void setNoise(boolean noise) {
+	public synchronized void setNoise(boolean noise) {
 		if(this.flags == null)
 			this.flags = new HashSet<RecordFlags>();
 		if(noise)
@@ -221,7 +221,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#isVisited()
 	 */
-	public boolean isVisited() {
+	public synchronized boolean isVisited() {
 		if(this.flags == null)
 			return false;
 		else {
@@ -235,7 +235,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#setVisited(boolean)
 	 */
-	public void setVisited(boolean visited) {
+	public synchronized void setVisited(boolean visited) {
 		if(this.flags == null)
 			this.flags = new HashSet<RecordFlags>();
 		if(visited)
@@ -247,7 +247,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#setAssigned(boolean)
 	 */
-	public void setAssigned(boolean visited) {
+	public synchronized void setAssigned(boolean visited) {
 		if(this.flags == null)
 			this.flags = new HashSet<RecordFlags>();
 		if(visited)
@@ -259,7 +259,7 @@ public abstract class Record implements RecordInterface {
 	/* (non-Javadoc)
 	 * @see me.mcnelis.rudder.data.RecordInterface#isAssigned()
 	 */
-	public boolean isAssigned() {
+	public synchronized boolean isAssigned() {
 		if(this.flags.contains(RecordFlags.ASSIGNED))
 			return true;
 		else

@@ -3,7 +3,6 @@ package me.mcnelis.rudder.ml.unsupervised.clustering;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.RecordInterface;
 import me.mcnelis.rudder.data.collections.RecordList;
 
@@ -16,7 +15,7 @@ import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
  * @author dmcnelis
  *
  */
-public class Cluster extends RecordList{
+public class Cluster extends RecordList<RecordInterface>{
 	/**
 	 * 
 	 */
@@ -26,18 +25,20 @@ public class Cluster extends RecordList{
 	public Cluster() {}
 	
 	
-	public void addRecord(Record r) {
+	public void addRecord(RecordInterface r) {
 		this.add(r);
 		
 	}
 	
 	public void combineClusters(Cluster c) {
-		for(Record r : c.getRecords())
+		for (Object o : c.getRecords()) {
+			RecordInterface r = (RecordInterface) o;
 			if(!this.contains(r))
 				this.add(r);
+		}
 	}
 	
-	public RecordList getRecords() {
+	public RecordList<RecordInterface> getRecords() {
 		return this;
 	}
 	

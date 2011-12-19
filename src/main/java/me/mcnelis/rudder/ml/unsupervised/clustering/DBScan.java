@@ -2,7 +2,7 @@ package me.mcnelis.rudder.ml.unsupervised.clustering;
 
 import java.util.ArrayList;
 
-import me.mcnelis.rudder.data.Record;
+import me.mcnelis.rudder.data.RecordInterface;
 
 public class DBScan extends DensityBased {
 
@@ -13,7 +13,7 @@ public class DBScan extends DensityBased {
 	@Override
 	protected ArrayList<Cluster> cluster() {
 
-		for (Record r : this.sourceData) {
+		for (RecordInterface r : this.sourceData) {
 			if (!r.isVisited()) {
 				r.setVisited(true);
 				Cluster c = this.rangeQuery(r);
@@ -33,13 +33,14 @@ public class DBScan extends DensityBased {
 		return this.clusters;
 	}
 	
-	protected Cluster expandCluster(Record r, Cluster c) {
+	protected Cluster expandCluster(RecordInterface r, Cluster c) {
 		
 		Cluster newCluster = new Cluster();
 		
 		newCluster.addRecord(r);
 		
-		for (Record rPrime : c.getRecords()) {
+		for (Object o : c.getRecords()) {
+			RecordInterface rPrime = (RecordInterface) o;
 			if (!rPrime.isVisited()) {
 				rPrime.setVisited(true);
 				Cluster cluster = this.rangeQuery(rPrime);

@@ -2,7 +2,7 @@ package me.mcnelis.rudder.ml.unsupervised.clustering;
 
 import java.util.ArrayList;
 
-import me.mcnelis.rudder.data.Record;
+import me.mcnelis.rudder.data.RecordInterface;
 import me.mcnelis.rudder.data.collections.RecordList;
 
 import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
@@ -15,10 +15,11 @@ public abstract class DensityBased {
 	protected int minClusters;
 	protected SynchronizedSummaryStatistics distance = new SynchronizedSummaryStatistics();
 	protected ArrayList<Cluster> clusters;
-	protected RecordList sourceData;
+	protected RecordList<RecordInterface> sourceData;
 	
-	public void setSourceData(RecordList rl) {
-		this.sourceData = rl;
+	@SuppressWarnings("unchecked")
+	public void setSourceData(RecordList<? extends RecordInterface> rl) {
+		this.sourceData = (RecordList<RecordInterface>) rl;
 	}
 	
 	/**
@@ -49,11 +50,11 @@ public abstract class DensityBased {
 	 * @param Record
 	 * @return Cluster of nearest neighbors to Record
 	 */
-	protected Cluster rangeQuery(Record r) {
+	protected Cluster rangeQuery(RecordInterface r) {
 		Cluster c = new Cluster();
 		c.addRecord(r);
 		
-		for (Record r2 : this.sourceData) {
+		for (RecordInterface r2 : this.sourceData) {
 			if(!r.equals(r2)) {
 				double distance = MathUtils.distance(
 						r2.getFeatureAndLabelArray(), 
@@ -83,7 +84,7 @@ public abstract class DensityBased {
 	public SynchronizedSummaryStatistics getDistanceStats() {
 		return this.distance;
 	}
-	public RecordList getSourceData() {
+	public RecordList<RecordInterface> getSourceData() {
 		return this.sourceData;
 	}
 }

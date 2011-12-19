@@ -12,7 +12,7 @@ public class RecordTest {
 	@SuppressWarnings("unused")
 	@Test
 	public void testSetFeature() {
-		RecordList list = new RecordList();
+		RecordList<Record> list = new RecordList<Record>();
 		for (int i=0; i<10000; i++) {
 			Record r = new Record() {
 				

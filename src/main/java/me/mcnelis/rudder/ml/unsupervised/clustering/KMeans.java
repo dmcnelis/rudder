@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-import me.mcnelis.rudder.data.Record;
+import me.mcnelis.rudder.data.RecordInterface;
 import me.mcnelis.rudder.data.collections.RecordList;
 
 import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
@@ -19,11 +19,12 @@ public class KMeans implements Serializable{
 	protected long maxIterations = 1000000000000l;
 	protected long currentIteration = 0l;
 	protected double minMovement = .0000001d;
-	protected RecordList sourceData;
+	protected RecordList<RecordInterface> sourceData;
 	
-	public KMeans(int k, RecordList data) {
+	@SuppressWarnings("unchecked")
+	public KMeans(int k, RecordList<? extends RecordInterface> data) {
 		this.k = k;
-		this.sourceData = data;
+		this.sourceData = (RecordList<RecordInterface>) data;
 	}
 	
 	public KMeans(int k) {
@@ -82,7 +83,8 @@ public class KMeans implements Serializable{
 	 */
 	protected void assignClusters() {
 		
-		for (Record r : this.sourceData) {
+		for (Object o : this.sourceData) {
+			RecordInterface r = (RecordInterface) o;
 			double min = Double.NaN;
 			int clusterIdx = -1;
 			for(int i=0; i<this.clusters.size(); i++) {
@@ -122,7 +124,7 @@ public class KMeans implements Serializable{
 			
 			Cluster c = new Cluster();
 			
-			c.setCentroid(this.sourceData.get(generator.nextInt(this.sourceData.size())).getFeatureAndLabelArray());
+			c.setCentroid(((RecordInterface) this.sourceData.get(generator.nextInt(this.sourceData.size()))).getFeatureAndLabelArray());
 			clusters.add(c);
 		}
 		this.clusters = clusters;
@@ -153,11 +155,11 @@ public class KMeans implements Serializable{
 		this.minMovement = minMovement;
 	}
 
-	public RecordList getSourceData() {
+	public RecordList<RecordInterface> getSourceData() {
 		return sourceData;
 	}
 
-	public void setSourceData(RecordList sourceData) {
+	public void setSourceData(RecordList<RecordInterface> sourceData) {
 		this.sourceData = sourceData;
 	}
 	

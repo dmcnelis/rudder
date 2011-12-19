@@ -2,10 +2,9 @@ package me.mcnelis.rudder.data.collections;
 
 import java.util.ArrayList;
 
-import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.RecordInterface;
 
-public class RecordList extends ArrayList<Record> {
+public class RecordList<T extends RecordInterface> extends ArrayList<T> {
 
 	protected int clusterIdx=-1;
 	/**
@@ -21,19 +20,24 @@ public class RecordList extends ArrayList<Record> {
 	public double[][] getUnsupervisedDoubleDoubleArray() {
 		double[][] d = new double[this.size()][];
 		int cnt=0;
-		for (RecordInterface r : this) {
-			d[cnt] = r.getFeatureAndLabelArray();
-			cnt++;
+		synchronized (this) {
+			for (RecordInterface r : this) {
+				d[cnt] = r.getFeatureAndLabelArray();
+				cnt++;
+			}
 		}
 		return d;
 	}
 
 	public double[][] getSupervisedFeatures() {
-		double[][] d = new double[this.size()][];
-		int cnt=0;
-		for (RecordInterface r : this) {
-			d[cnt] = r.getFeatureArray();
-			cnt++;
+		
+			double[][] d = new double[this.size()][];
+			int cnt=0;
+		synchronized (this) {
+			for (RecordInterface r : this) {
+				d[cnt] = r.getFeatureArray();
+				cnt++;
+			}
 		}
 		return d;
 	}
@@ -41,9 +45,11 @@ public class RecordList extends ArrayList<Record> {
 	public double[] getSupervisedLabels() {
 		double[] d = new double[this.size()];
 		int cnt=0;
-		for (RecordInterface r : this) {
-			d[cnt] = r.getDoubleLabel();
-			cnt++;
+		synchronized (this) {
+			for (RecordInterface r : this) {
+				d[cnt] = r.getDoubleLabel();
+				cnt++;
+			}
 		}
 		
 		return d;
