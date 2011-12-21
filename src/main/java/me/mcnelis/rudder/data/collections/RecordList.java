@@ -13,7 +13,7 @@ public class RecordList<T extends RecordInterface> extends ArrayList<T> {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Calls {@link me.mcnelis.rudder.data.Record#getFeatureAndLabelArray()} on
+	 * Calls {@link me.mcnelis.rudder.data.Record#getFeatureAndLabelDoubleArray()} on
 	 * each element and creates a full dataset.
 	 * @return
 	 */
@@ -22,7 +22,7 @@ public class RecordList<T extends RecordInterface> extends ArrayList<T> {
 		int cnt=0;
 		synchronized (this) {
 			for (RecordInterface r : this) {
-				d[cnt] = r.getFeatureAndLabelArray();
+				d[cnt] = r.getFeatureAndLabelDoubleArray();
 				cnt++;
 			}
 		}
@@ -35,7 +35,7 @@ public class RecordList<T extends RecordInterface> extends ArrayList<T> {
 			int cnt=0;
 		synchronized (this) {
 			for (RecordInterface r : this) {
-				d[cnt] = r.getFeatureArray();
+				d[cnt] = r.getFeatureDoubleArray();
 				cnt++;
 			}
 		}
@@ -63,9 +63,9 @@ public class RecordList<T extends RecordInterface> extends ArrayList<T> {
 	}
 	
 	public double[] getUnsupervisedSampleDoubleArray() {
-		return this.get(0).getFeatureAndLabelArray();
+		return this.get(0).getFeatureAndLabelDoubleArray();
 	}
 	public double[] getSupervisedSampleDoubleArray() {
-		return this.get(0).getFeatureArray();
+		return this.get(0).getFeatureDoubleArray();
 	}
 }

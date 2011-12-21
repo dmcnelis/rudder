@@ -62,11 +62,11 @@ public class Cluster extends RecordList<RecordInterface>{
 	 */
 	protected synchronized double[] calculateCentroid() {
 		
-		this.centroid = new double[this.get(0).getFeatureAndLabelArray().length];
+		this.centroid = new double[this.get(0).getFeatureAndLabelDoubleArray().length];
 		
 		ArrayList<SynchronizedSummaryStatistics> stats = new  ArrayList<SynchronizedSummaryStatistics>();
 		for (RecordInterface elem : this) {
-			double[] arr = elem.getFeatureAndLabelArray();
+			double[] arr = elem.getFeatureAndLabelDoubleArray();
 			for (int i=0; i<arr.length; i++) {
 				
 				SynchronizedSummaryStatistics stat;

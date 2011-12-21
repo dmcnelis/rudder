@@ -71,10 +71,10 @@ public class MultiLinearRegression implements Serializable{
 	public boolean addRecord(RecordInterface record) {
 		if (this.records == null)  {
 			this.records = new RecordList<RecordInterface>();
-			this.stats = new SynchronizedMultivariateSummaryStatistics(record.getFeatureArray().length, false);
+			this.stats = new SynchronizedMultivariateSummaryStatistics(record.getFeatureDoubleArray().length, false);
 		}
 		try {
-			this.stats.addValue(record.getFeatureArray());
+			this.stats.addValue(record.getFeatureDoubleArray());
 			return this.records.add(record);
 		} catch (DimensionMismatchException e) {
 			return false;

@@ -16,6 +16,17 @@ public interface RecordInterface {
 			throws FeatureNotFoundException;
 
 	/**
+	 * Set a feature variable for a class, currently all
+	 * features must be double
+	 * @param featureName
+	 * @param d
+	 * @return
+	 * @throws FeatureNotFoundException
+	 */
+	public abstract boolean setFeature(String featureName, String d)
+			throws FeatureNotFoundException;
+	
+	/**
 	 * Set the label(s) for the record
 	 * @param labelName
 	 * @param Object to set label as
@@ -35,8 +46,13 @@ public interface RecordInterface {
 	 * 
 	 * @return double array of features for processing
 	 */
-	public abstract double[] getFeatureArray();
+	public abstract double[] getFeatureDoubleArray();
 
+	/**
+	 * Return all of the features in their original object form
+	 */
+	public abstract Object[] getAllFeatures();
+	
 	/**
 	 * In unsupervised learning the order of your features is irrelevant
 	 * so it doesn't matter what you're going through, as long as the label
@@ -50,7 +66,7 @@ public interface RecordInterface {
 	 * 
 	 * @return array of all your feature and labels  for unsupervised learning
 	 */
-	public abstract double[] getFeatureAndLabelArray();
+	public abstract double[] getFeatureAndLabelDoubleArray();
 
 	/**
 	 * Get a double representation of the label.
@@ -111,5 +127,7 @@ public interface RecordInterface {
 	 * @return
 	 */
 	public abstract boolean equals(Object obj);
+
+	public abstract String getLabel();
 
 }

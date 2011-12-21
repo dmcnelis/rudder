@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import me.mcnelis.rudder.data.Feature;
+import me.mcnelis.rudder.data.NumericFeature;
 import me.mcnelis.rudder.data.MockRecord;
 import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.collections.RecordList;
@@ -34,7 +34,7 @@ public class MultiLinearRegressionTest {
 		
 		Record r2 = new Record(){
 			@SuppressWarnings("unused")
-			@Feature
+			@NumericFeature
 			double f2 = 0d;
 		};
 		assertFalse(ols.addRecord(r2));

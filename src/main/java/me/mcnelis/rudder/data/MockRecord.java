@@ -2,14 +2,15 @@ package me.mcnelis.rudder.data;
 
 public class MockRecord extends Record {
 	
-	@Feature
+	@NumericFeature
 	protected double feature1;
 	
-	@Feature
+	@NumericFeature
 	protected double feature2;
 	
-	@Feature
+	@NumericFeature
 	protected double feature3;
+	
 	
 	protected double nonFeature;
 	

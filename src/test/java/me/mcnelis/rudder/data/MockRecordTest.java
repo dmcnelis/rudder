@@ -62,7 +62,7 @@ public class MockRecordTest {
 			fail("Should have executed cleanly");
 		}
 		
-		double[] arr = r.getFeatureArray();
+		double[] arr = r.getFeatureDoubleArray();
 		assertEquals(1d, arr[0], .0001);
 		assertEquals(2d, arr[1], .0001);
 		assertEquals(3d, arr[2], .0001);

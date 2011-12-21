@@ -91,7 +91,7 @@ public class KMeans implements Serializable{
 				double distance = 
 						MathUtils.distance(
 								this.clusters.get(i).getCentroid(), 
-								r.getFeatureAndLabelArray()
+								r.getFeatureAndLabelDoubleArray()
 								);
 				if(Double.isNaN(min) || distance < min) {
 					clusterIdx = i;
@@ -124,7 +124,7 @@ public class KMeans implements Serializable{
 			
 			Cluster c = new Cluster();
 			
-			c.setCentroid(((RecordInterface) this.sourceData.get(generator.nextInt(this.sourceData.size()))).getFeatureAndLabelArray());
+			c.setCentroid(((RecordInterface) this.sourceData.get(generator.nextInt(this.sourceData.size()))).getFeatureAndLabelDoubleArray());
 			clusters.add(c);
 		}
 		this.clusters = clusters;

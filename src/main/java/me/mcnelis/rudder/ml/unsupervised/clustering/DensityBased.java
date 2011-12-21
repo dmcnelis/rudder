@@ -57,8 +57,8 @@ public abstract class DensityBased {
 		for (RecordInterface r2 : this.sourceData) {
 			if(!r.equals(r2)) {
 				double distance = MathUtils.distance(
-						r2.getFeatureAndLabelArray(), 
-						r.getFeatureAndLabelArray()
+						r2.getFeatureAndLabelDoubleArray(), 
+						r.getFeatureAndLabelDoubleArray()
 						);
 				
 				this.distance.addValue(distance);
