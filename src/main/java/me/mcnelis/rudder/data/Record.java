@@ -135,7 +135,11 @@ public abstract class Record implements RecordInterface {
 			if (annotation != null) {
 				try {
 					f.setAccessible(true);
-					arr.addElement(f.getDouble(this));
+					double dval = f.getDouble(this);
+					if(!Double.isNaN(dval)) {
+						
+						arr.addElement(f.getDouble(this));
+					}
 				} catch (IllegalArgumentException e) {
 					
 					e.printStackTrace();
