@@ -36,9 +36,9 @@ public class NaiveBayesClassification {
 					bf.add(f);	
 				} catch (IndexOutOfBoundsException iobe) {
 					if (f instanceof Double)
-						bf = new BayesNumericFeature();
+						bf = new BayesContinuousFeature();
 					else
-						bf = new BayesTextFeature();
+						bf = new BayesDiscreteFeature();
 					bf.add(f);	
 					featureList.add(bf);
 				}	

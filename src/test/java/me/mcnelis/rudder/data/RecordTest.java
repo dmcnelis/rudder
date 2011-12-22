@@ -132,4 +132,20 @@ public class RecordTest {
 		assertEquals("test",(String)r.getAllFeatures()[0]);
 
 	}
+	
+	@Test
+	public void testUndefinedFeatureDropout() {
+		Record r = new Record() {
+			@NumericFeature double f1;
+			@NumericFeature double f2 = Double.NaN;
+			
+		};
+		try {
+			r.setFeature("f1", 1d);
+		} catch (FeatureNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(1, r.getFeatureDoubleArray().length);
+	}
 }

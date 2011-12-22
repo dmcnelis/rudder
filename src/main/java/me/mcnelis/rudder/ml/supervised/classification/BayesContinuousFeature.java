@@ -6,11 +6,11 @@ import org.apache.commons.math.MathException;
 import org.apache.commons.math.distribution.NormalDistributionImpl;
 import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
 
-public class BayesNumericFeature implements BayesFeature {
+public class BayesContinuousFeature implements BayesFeature {
 
 	protected SynchronizedSummaryStatistics stats = new SynchronizedSummaryStatistics();
 	public void add(Object newInstance) {
-
+	
 		this.stats.addValue((Double) newInstance);
 		
 	}
@@ -30,14 +30,14 @@ public class BayesNumericFeature implements BayesFeature {
 		try {
 			return dist.cumulativeProbability((Double) featureValue);
 		} catch (MathException e) {
-			// TODO Auto-generated catch block
+			// TODO handle this more elegantly
 			e.printStackTrace();
 		}
 		return Double.NaN;
 	}
 
 	public boolean merge(BayesFeature f) {
-		if(!(f instanceof BayesNumericFeature)) {
+		if(!(f instanceof BayesContinuousFeature)) {
 			return false;
 		}
 		//TODO: Add merge algorithm

@@ -10,7 +10,7 @@ public class BayesTextFeatureTest {
 
 	@Test
 	public void testGetProbabilities() {
-		BayesTextFeature f = new BayesTextFeature();
+		BayesDiscreteFeature f = new BayesDiscreteFeature();
 		f.add("test1");
 		f.add("string2");
 		f.add("string2");
@@ -24,7 +24,7 @@ public class BayesTextFeatureTest {
 
 	@Test
 	public void testGetClassScoreZero() {
-		BayesTextFeature f = new BayesTextFeature();
+		BayesDiscreteFeature f = new BayesDiscreteFeature();
 		f.add("test1");
 		f.add("string2");
 		f.add("string2");
@@ -36,7 +36,7 @@ public class BayesTextFeatureTest {
 
 	@Test
 	public void testGetClassScorePointFiveNoProbTestFirst() {
-		BayesTextFeature f = new BayesTextFeature();
+		BayesDiscreteFeature f = new BayesDiscreteFeature();
 		f.add("test1");
 		f.add("string2");
 		f.add("string2");
@@ -48,7 +48,7 @@ public class BayesTextFeatureTest {
 	
 	@Test
 	public void testGetClassScorePointFiveProbTestFirst() {
-		BayesTextFeature f = new BayesTextFeature();
+		BayesDiscreteFeature f = new BayesDiscreteFeature();
 		f.add("test1");
 		f.add("string2");
 		f.add("string2");

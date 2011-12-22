@@ -7,7 +7,7 @@ import java.util.HashMap;
  * @author dmcnelis
  *
  */
-public class BayesTextFeature implements BayesFeature {
+public class BayesDiscreteFeature implements BayesFeature {
 	protected int instances = 0;
 	protected HashMap<String, Integer> valueCounter = new HashMap<String, Integer>();
 	HashMap<Object, Double> probabilities; 
@@ -55,7 +55,7 @@ public class BayesTextFeature implements BayesFeature {
 	}
 	
 	public boolean merge(BayesFeature f) {
-		if(!(f instanceof BayesTextFeature)) {
+		if(!(f instanceof BayesDiscreteFeature)) {
 			return false;
 		}
 		
