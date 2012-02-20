@@ -4,7 +4,7 @@
 
   <groupId>me.mcnelis.ml</groupId>
   <artifactId>rudder</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <packaging>jar</packaging>
 
   <name>rudder</name>
@@ -37,7 +37,7 @@
  
                 <!-- optional URL to server. Default value is http://localhost:9000 -->
                 <sonar.host.url>
-                  http://myserver:9000
+                  http://localhost:9000
                 </sonar.host.url>
             </properties>
         </profile>
@@ -78,5 +78,10 @@
     	<artifactId>cognitive-foundry</artifactId>
     	<version>3.3.2</version>
     </dependency>
+     <dependency>
+     	<groupId>log4j</groupId>
+     	<artifactId>log4j</artifactId>
+     	<version>1.2.16</version>
+     </dependency>
   </dependencies>
 </project>

@@ -7,7 +7,9 @@ import java.util.HashMap;
 import me.mcnelis.rudder.data.Label;
 import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.TextFeature;
+import me.mcnelis.rudder.data.collections.IRudderList;
 import me.mcnelis.rudder.data.collections.RecordList;
+import me.mcnelis.rudder.data.collections.RudderList;
 import me.mcnelis.rudder.exceptions.FeatureNotFoundException;
 
 import org.junit.Test;
@@ -16,7 +18,7 @@ public class NaiveBayesClassificationTest {
 
 	@Test
 	public void testClassScores() {
-		RecordList<MockTextFeature> list = new RecordList<MockTextFeature>();
+		IRudderList<MockTextFeature> list = new RudderList<MockTextFeature>();
 		
 		list = getMockTextFeatures();
 		
@@ -43,12 +45,12 @@ public class NaiveBayesClassificationTest {
 			e.printStackTrace();
 		}
 		
-		assertEquals("contra", bayes.getLabel(m));
-		assertEquals("double dragon", bayes.getLabel(m2));
+		assertEquals("contra", bayes.getLabel(m).toLowerCase());
+		assertEquals("double dragon", bayes.getLabel(m2).toLowerCase());
 	}
 
-	private RecordList<MockTextFeature> getMockTextFeatures() {
-		RecordList<MockTextFeature> list = new RecordList<MockTextFeature>();
+	private IRudderList<MockTextFeature> getMockTextFeatures() {
+		IRudderList<MockTextFeature> list = new RudderList<MockTextFeature>();
 		MockTextFeature mtf1 = new MockTextFeature();
 		MockTextFeature mtf2 = new MockTextFeature();
 		MockTextFeature mtf3 = new MockTextFeature();

@@ -1,6 +1,6 @@
 package me.mcnelis.rudder.ml.unsupervised.clustering;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import me.mcnelis.rudder.data.RecordInterface;
 import me.mcnelis.rudder.data.collections.RecordList;
@@ -8,40 +8,45 @@ import me.mcnelis.rudder.data.collections.RecordList;
 import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
 import org.apache.commons.math.util.MathUtils;
 
-public abstract class DensityBased {
+public abstract class DensityBased
+{
 
 	protected double epsilon;
 	protected int minPts;
 	protected int minClusters;
 	protected SynchronizedSummaryStatistics distance = new SynchronizedSummaryStatistics();
-	protected ArrayList<Cluster> clusters;
+	protected List<Cluster> clusters;
 	protected RecordList<RecordInterface> sourceData;
-	
+
 	@SuppressWarnings("unchecked")
-	public void setSourceData(RecordList<? extends RecordInterface> rl) {
+	public void setSourceData(RecordList<? extends RecordInterface> rl)
+	{
 		this.sourceData = (RecordList<RecordInterface>) rl;
 	}
-	
+
 	/**
 	 * 
-	 * @param epsilon -- the max distance between elements in the cluster
+	 * @param epsilon
+	 *            -- the max distance between elements in the cluster
 	 * @param minPts
 	 */
-	protected DensityBased (double epsilon, int minPts) {
+	protected DensityBased(double epsilon, int minPts)
+	{
 		this.epsilon = epsilon;
 		this.minPts = minPts;
 	}
-	
-	public ArrayList<Cluster> getClusters() {
-		if(this.clusters == null){
-			this.clusters = new ArrayList<Cluster>();
+
+	public List<Cluster> getClusters()
+	{
+		if (this.clusters == null)
+		{
 			this.clusters = this.cluster();
 		}
 		return this.clusters;
 	}
-	
-	protected abstract ArrayList<Cluster> cluster();
-	
+
+	protected abstract List<Cluster> cluster();
+
 	/**
 	 * Find the neighbors of r within range (this.epsilon)
 	 * 
@@ -50,41 +55,51 @@ public abstract class DensityBased {
 	 * @param Record
 	 * @return Cluster of nearest neighbors to Record
 	 */
-	protected Cluster rangeQuery(RecordInterface r) {
+	protected Cluster rangeQuery(RecordInterface r)
+	{
 		Cluster c = new Cluster();
 		c.addRecord(r);
-		
-		for (RecordInterface r2 : this.sourceData) {
-			if(!r.equals(r2)) {
-				double distance = MathUtils.distance(
-						r2.getFeatureAndLabelDoubleArray(), 
-						r.getFeatureAndLabelDoubleArray()
-						);
-				
-				this.distance.addValue(distance);
-				
-				if (distance < this.epsilon ) {	
+
+		for (RecordInterface r2 : this.sourceData)
+		{
+			if (!r.equals(r2))
+			{
+				double mDistance = MathUtils.distance(
+						r2.getFeatureAndLabelDoubleArray(),
+						r.getFeatureAndLabelDoubleArray());
+
+				this.distance.addValue(mDistance);
+
+				if (mDistance < this.epsilon)
+				{
 					r2.setNoise(false);
-					
+
 					c.addRecord(r2);
 				}
 			}
-			
+
 		}
-		
+
 		return c;
 	}
-	
-	public double getMinDistance() {
+
+	public double getMinDistance()
+	{
 		return this.distance.getMin();
 	}
-	public double getMeanDistance() {
+
+	public double getMeanDistance()
+	{
 		return this.distance.getMean();
 	}
-	public SynchronizedSummaryStatistics getDistanceStats() {
+
+	public SynchronizedSummaryStatistics getDistanceStats()
+	{
 		return this.distance;
 	}
-	public RecordList<RecordInterface> getSourceData() {
+
+	public RecordList<RecordInterface> getSourceData()
+	{
 		return this.sourceData;
 	}
 }

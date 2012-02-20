@@ -2,98 +2,134 @@ package me.mcnelis.rudder.ml.supervised.classification;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import me.mcnelis.rudder.data.RecordInterface;
+import me.mcnelis.rudder.data.collections.IRudderList;
 import me.mcnelis.rudder.data.collections.RecordList;
 
-public class NaiveBayesClassification {
-	
-	
-	protected HashMap<String, ArrayList<BayesFeature>> classList = new HashMap<String, ArrayList<BayesFeature>>();
-	
-	protected RecordList<? extends RecordInterface> records;
-	
-	public void setData(RecordList<? extends RecordInterface> records) {
-		this.records = records;
-	}
-	
-	public void train() {
+public class NaiveBayesClassification
+{
+
+	protected Map<String, List<BayesFeature>> classList = new HashMap<String, List<BayesFeature>>();
+
+	protected IRudderList<?> records;
+
+	public void setData(IRudderList<?> records)
+	{
 		
-		for (RecordInterface r : records) {
-			
-			ArrayList<BayesFeature> featureList = null;
-			if (!this.classList.containsKey(r.getLabel())) {
+		this.records = records;
+		
+	}
+
+	public void train()
+	{
+
+		for (Object r : records)
+		{
+
+			List<BayesFeature> featureList = null;
+			if (!this.classList.containsKey(records.getStringLabel(r)))
+			{
 				featureList = new ArrayList<BayesFeature>();
-			} else {
-				featureList = this.classList.get(r.getLabel());
 			}
-			
+			else
+			{
+				featureList = this.classList.get(records.getStringLabel(r));
+			}
+
 			int idx = 0;
-			for (Object f : r.getAllFeatures()) {
+			for (Object f : records.getRecordFeatures(r))
+			{
 				BayesFeature bf = null;
-				try {
+				try
+				{
 					bf = featureList.get(idx);
-					bf.add(f);	
-				} catch (IndexOutOfBoundsException iobe) {
+					bf.add(f);
+				}
+				catch (IndexOutOfBoundsException iobe)
+				{
 					if (f instanceof Double)
+					{
 						bf = new BayesContinuousFeature();
+					}
 					else
+					{
 						bf = new BayesDiscreteFeature();
-					bf.add(f);	
+					}
+					bf.add(f);
 					featureList.add(bf);
-				}	
+				}
 				idx++;
 			}
-			this.classList.put(r.getLabel(), featureList);
+			this.classList.put(records.getStringLabel(r), featureList);
 		}
 	}
-	
-	public HashMap<String, Double> getClassScores(RecordInterface r) {
-		
-		HashMap<String, Double> labelScores = new  HashMap<String, Double>();
-		
-		for (String label : this.classList.keySet()) {
+
+	public Map<String, Double> getClassScores(Object r)
+	{
+
+		HashMap<String, Double> labelScores = new HashMap<String, Double>();
+
+		for (String label : this.classList.keySet())
+		{
 			double scores = 0d;
-			ArrayList<BayesFeature> featureList = this.classList.get(label);
-			
-			Object[] values = r.getAllFeatures();
+			List<BayesFeature> featureList = this.classList.get(label);
+
+			Object[] values = this.records.getRecordFeatures(r).toArray();
 			int idx = 0;
-			for(BayesFeature bf :  featureList) {
+			for (BayesFeature bf : featureList)
+			{
 				double rawScore = bf.getClassScore(values[idx]);
-				if(rawScore == 0d) 
+				if (rawScore == 0d)
+				{
 					rawScore = -1;
+				}
+				
 				double score = Math.log(rawScore);
 				if (Double.isNaN(score))
+				{
 					score = 0d;
-				
+				}
+
 				scores += score;
 				idx++;
 			}
+			
 			labelScores.put(label, scores);
 		}
-		
+
 		double den = 0d;
-		for(Double ps : labelScores.values()) {
+		for (Double ps : labelScores.values())
+		{
 			den += ps;
 		}
-		
-		HashMap<String, Double> normalizedScores = new  HashMap<String, Double>();
-		
-		for (String label : labelScores.keySet()) {
-			normalizedScores.put(label, labelScores.get(label) / den);
+
+		HashMap<String, Double> normalizedScores = new HashMap<String, Double>();
+
+		for (Entry<String, Double> label : labelScores.entrySet())
+		{
+			normalizedScores.put(label.getKey(),
+					labelScores.get(label.getKey()) / den);
 		}
-		
+
 		return normalizedScores;
 	}
-	
-	public String getLabel(RecordInterface r) {
-		HashMap<String, Double> labelScores = this.getClassScores(r);
+
+	public String getLabel(Object r)
+	{
+		Map<String, Double> labelScores = this.getClassScores(r);
 		double maxScore = 0d;
 		String myLabel = "";
-		for (String label : labelScores.keySet()) {
-			if (maxScore < labelScores.get(label)) {
-				myLabel = label;
-				maxScore = labelScores.get(label);
+		for (Entry<String, Double> label : labelScores.entrySet())
+		{
+			
+			if (maxScore < labelScores.get(label.getKey()))
+			{
+				myLabel = label.getKey();
+				maxScore = labelScores.get(label.getKey());
 			}
 		}
 		return myLabel;
