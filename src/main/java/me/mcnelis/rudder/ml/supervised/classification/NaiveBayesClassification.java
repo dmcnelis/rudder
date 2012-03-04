@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import me.mcnelis.rudder.data.RecordInterface;
+import org.apache.log4j.Logger;
+
 import me.mcnelis.rudder.data.collections.IRudderList;
-import me.mcnelis.rudder.data.collections.RecordList;
 
 public class NaiveBayesClassification
 {
-
+	private static final Logger LOG = Logger.getLogger(NaiveBayesClassification.class);
 	protected Map<String, List<BayesFeature>> classList = new HashMap<String, List<BayesFeature>>();
 
 	protected IRudderList<?> records;
@@ -97,7 +97,7 @@ public class NaiveBayesClassification
 				scores += score;
 				idx++;
 			}
-			
+			LOG.debug(label + ": " + scores);
 			labelScores.put(label, scores);
 		}
 

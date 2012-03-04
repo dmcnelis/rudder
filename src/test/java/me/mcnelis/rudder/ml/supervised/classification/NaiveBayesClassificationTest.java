@@ -1,14 +1,13 @@
 package me.mcnelis.rudder.ml.supervised.classification;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
+import java.lang.reflect.Field;
 
+import me.mcnelis.rudder.data.FeatureType;
 import me.mcnelis.rudder.data.Label;
-import me.mcnelis.rudder.data.Record;
 import me.mcnelis.rudder.data.TextFeature;
 import me.mcnelis.rudder.data.collections.IRudderList;
-import me.mcnelis.rudder.data.collections.RecordList;
 import me.mcnelis.rudder.data.collections.RudderList;
 import me.mcnelis.rudder.exceptions.FeatureNotFoundException;
 
@@ -28,7 +27,7 @@ public class NaiveBayesClassificationTest {
 		
 		MockTextFeature m = new MockTextFeature();
 		MockTextFeature m2 = new MockTextFeature();
-		try {
+		
 			m.setFeature("text1", "up");
 			m.setFeature("text1", "down");
 			m.setFeature("text1", "left");
@@ -40,10 +39,7 @@ public class NaiveBayesClassificationTest {
 			m2.setFeature("text3", "b");
 			m2.setFeature("text4", "b");
 			m2.setFeature("text5", "b");
-		} catch (FeatureNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 		assertEquals("contra", bayes.getLabel(m).toLowerCase());
 		assertEquals("double dragon", bayes.getLabel(m2).toLowerCase());
@@ -68,7 +64,7 @@ public class NaiveBayesClassificationTest {
 			mtf1.setFeature("text3", "left");
 			mtf1.setFeature("text4", "right");
 			mtf1.setFeature("text5", "up");
-			mtf1.setLabel("label", "contra");
+			mtf1.setLabel("contra");
 			list.add(mtf1);
 			
 			mtf2.setFeature("text1", "left");
@@ -76,7 +72,7 @@ public class NaiveBayesClassificationTest {
 			mtf2.setFeature("text3", "up");
 			mtf2.setFeature("text4", "down");
 			mtf2.setFeature("text5", "left");
-			mtf2.setLabel("label", "contra");
+			mtf2.setLabel("contra");
 			list.add(mtf2);
 			
 			mtf3.setFeature("text1", "up");
@@ -84,7 +80,7 @@ public class NaiveBayesClassificationTest {
 			mtf3.setFeature("text3", "left");
 			mtf3.setFeature("text4", "right");
 			mtf3.setFeature("text5", "up");
-			mtf3.setLabel("label", "contra");
+			mtf3.setLabel("contra");
 			list.add(mtf3);
 			
 			mtf4.setFeature("text1", "left");
@@ -92,7 +88,7 @@ public class NaiveBayesClassificationTest {
 			mtf4.setFeature("text3", "left");
 			mtf4.setFeature("text4", "right");
 			mtf4.setFeature("text5", "up");
-			mtf4.setLabel("label", "contra");
+			mtf4.setLabel("contra");
 			list.add(mtf4);
 			
 			mtf5.setFeature("text1", "up");
@@ -100,7 +96,7 @@ public class NaiveBayesClassificationTest {
 			mtf5.setFeature("text3", "left");
 			mtf5.setFeature("text4", "right");
 			mtf5.setFeature("text5", "down");
-			mtf5.setLabel("label", "contra");
+			mtf5.setLabel("contra");
 			list.add(mtf5);
 			
 			mtf6.setFeature("text1", "A");
@@ -108,7 +104,7 @@ public class NaiveBayesClassificationTest {
 			mtf6.setFeature("text3", "left");
 			mtf6.setFeature("text4", "c");
 			mtf6.setFeature("text5", "up");
-			mtf6.setLabel("label", "Double dragon");
+			mtf6.setLabel("Double dragon");
 			list.add(mtf6);
 			
 			mtf7.setFeature("text1", "b");
@@ -116,7 +112,7 @@ public class NaiveBayesClassificationTest {
 			mtf7.setFeature("text3", "left");
 			mtf7.setFeature("text4", "right");
 			mtf7.setFeature("text5", "c");
-			mtf7.setLabel("label", "double dragon");
+			mtf7.setLabel("double dragon");
 			list.add(mtf7);
 			
 			mtf8.setFeature("text1", "a");
@@ -124,7 +120,7 @@ public class NaiveBayesClassificationTest {
 			mtf8.setFeature("text3", "left");
 			mtf8.setFeature("text4", "c");
 			mtf8.setFeature("text5", "left");
-			mtf8.setLabel("label", "double dragon");
+			mtf8.setLabel("double dragon");
 			list.add(mtf8);
 			
 			mtf9.setFeature("text1", "a");
@@ -132,7 +128,7 @@ public class NaiveBayesClassificationTest {
 			mtf9.setFeature("text3", "right");
 			mtf9.setFeature("text4", "c");
 			mtf9.setFeature("text5", "up");
-			mtf9.setLabel("label", "double dragon");
+			mtf9.setLabel("double dragon");
 			list.add(mtf9);
 			
 			mtf10.setFeature("text1", "b");
@@ -140,13 +136,11 @@ public class NaiveBayesClassificationTest {
 			mtf10.setFeature("text3", "b");
 			mtf10.setFeature("text4", "b");
 			mtf10.setFeature("text5", "b");
-			mtf10.setLabel("label", "double dragon");
+			mtf10.setLabel("double dragon");
 			list.add(mtf10);
 			
 			
-		} catch (FeatureNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -155,7 +149,7 @@ public class NaiveBayesClassificationTest {
 		return list;
 	}
 
-	class MockTextFeature extends Record {
+	class MockTextFeature {
 		@TextFeature
 		public String text1;
 		
@@ -171,7 +165,38 @@ public class NaiveBayesClassificationTest {
 		@TextFeature
 		public String text5;
 		
-		@Label
+		@Label(setlabel="setLabel", type=FeatureType.TEXT)
 		public String label;
+		
+		public void setLabel(String label)
+		{
+			this.label = label;
+		}
+		
+		public void setFeature(String field, String val)
+		{
+			Field[] fields = this.getClass().getFields();
+			for(Field f : fields)
+			{
+				if(f.getName().equalsIgnoreCase(field))
+				{
+					f.setAccessible(true);
+					try
+					{
+						f.set(this, val);
+					}
+					catch (IllegalArgumentException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					catch (IllegalAccessException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 }

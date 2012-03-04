@@ -3,40 +3,41 @@ package me.mcnelis.rudder.ml.unsupervised.clustering;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.mcnelis.rudder.data.RecordInterface;
+import org.apache.log4j.Logger;
 
 public class DBScan extends DensityBased
 {
-
+	private static final Logger LOG = Logger.getLogger(DBScan.class);
+	
 	protected DBScan(double epsilon, int minPts)
 	{
 		super(epsilon, minPts);
 	}
 
 	@Override
-	protected List<Cluster> cluster()
+	protected List<Cluster<?>> cluster()
 	{
 		if (this.clusters == null)
 		{
-			this.clusters = new ArrayList<Cluster>();
+			this.clusters = new ArrayList<Cluster<?>>();
 		}
-		for (RecordInterface r : this.sourceData)
+		for (Object r : this.sourceData)
 		{
-			if (!r.isVisited())
+			if (!this.sourceData.isVisited(r))
 			{
-				r.setVisited(true);
-				Cluster c = this.rangeQuery(r);
+				this.sourceData.setVisited(r,true);
+				Cluster<?> c = this.rangeQuery(r);
 
 				if (c.getRecords().size() < this.minPts)
 				{
 
-					r.setNoise(true);
+					this.sourceData.setNoise(r,true);
 
 				}
 				else
 				{
 
-					Cluster addCluster = this.expandCluster(r, c);
+					Cluster<?> addCluster = this.expandCluster(r, c);
 					this.clusters.add(addCluster);
 
 				}
@@ -45,31 +46,31 @@ public class DBScan extends DensityBased
 		return this.clusters;
 	}
 
-	protected Cluster expandCluster(RecordInterface r, Cluster c)
+	protected Cluster<?> expandCluster(Object r, Cluster<?> c)
 	{
-
-		Cluster newCluster = new Cluster();
+		LOG.trace("Expanding cluster");
+		Cluster<Object> newCluster = new Cluster<Object>();
 
 		newCluster.addRecord(r);
 
 		for (Object o : c.getRecords())
 		{
-			RecordInterface rPrime = (RecordInterface) o;
-			if (!rPrime.isVisited())
+			
+			if (!c.isVisited(o))
 			{
-				rPrime.setVisited(true);
-				Cluster cluster = this.rangeQuery(rPrime);
+				c.setVisited(o,true);
+				Cluster<?> cluster = this.rangeQuery(o);
 				if (cluster.getRecords().size() >= this.minPts)
 				{
 
-					cluster.combineClusters(this.expandCluster(rPrime, cluster));
+					cluster.combineClusters(this.expandCluster(o, cluster));
 
 				}
 			}
 
-			if (!rPrime.isAssigned())
+			if (!c.isAssigned(o))
 			{
-				newCluster.addRecord(rPrime);
+				newCluster.addRecord(o);
 			}
 		}
 

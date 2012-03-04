@@ -15,25 +15,34 @@ the issue.
 Example of running clustering
 
 
-	class MyRecordClass extends Record {
+	class MyRecordClass  {
 		@Feature
 		double myFeature1
 		@Feature
 		double myFeature2
 		@Feature
 		double myFeature3
-		@Label
+		@Label(setlabel="setLabel")
 		String myLabel;	
 		Object nonFeatureItem;
 		String nonFeatureOrLabelString;
+		
+		void setLabel(String label);
+		
+		//Only use non-primitives in the set method signature
+		void setLabel(Double doubleLabel);
+		
 		//Other stuff I want to do
+		
+		//This API uses equals often, so your object should override it
+		boolean equals(Object o);
 	}
 
 	class MyClusterRunner {
 		public static void main(String[] args) {
 			double epsilon = 4d;  //Maximum distance between records in a cluster
 			int minClusterSize = 3;  //Minimum number of records in a cluster
-			RecordList myRecords = new RecordList();
+			IRudderList<MyRecordClass> myRecords = new RudderList<MyRecordClass>();
 			//populate your object	
 			DBScan dbscan = new DBScan(epsilon, minClusterSize);
 			db.setSourceData(list);
@@ -41,7 +50,7 @@ Example of running clustering
 			//do stuff with your clusters i.e. print record label and cluster
 			for(int i=0; i<clusters.size(); i++) {
 				for(MyRecordClass r : clusters.getElements()) {
-					System.out.println("Cluster " + i+ ": " + r.getLabel());
+					System.out.println("Cluster " + i+ ": " + myRecords.getStringLabel(r));
 				}
 			}
 		}

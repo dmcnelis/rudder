@@ -2,8 +2,7 @@ package me.mcnelis.rudder.ml.unsupervised.clustering;
 
 import java.util.List;
 
-import me.mcnelis.rudder.data.RecordInterface;
-import me.mcnelis.rudder.data.collections.RecordList;
+import me.mcnelis.rudder.data.collections.IRudderList;
 
 import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
 import org.apache.commons.math.util.MathUtils;
@@ -15,13 +14,12 @@ public abstract class DensityBased
 	protected int minPts;
 	protected int minClusters;
 	protected SynchronizedSummaryStatistics distance = new SynchronizedSummaryStatistics();
-	protected List<Cluster> clusters;
-	protected RecordList<RecordInterface> sourceData;
+	protected List<Cluster<?>> clusters;
+	protected IRudderList<?> sourceData;
 
-	@SuppressWarnings("unchecked")
-	public void setSourceData(RecordList<? extends RecordInterface> rl)
+	public void setSourceData(IRudderList<?> rl)
 	{
-		this.sourceData = (RecordList<RecordInterface>) rl;
+		this.sourceData = (IRudderList<?>) rl;
 	}
 
 	/**
@@ -36,7 +34,7 @@ public abstract class DensityBased
 		this.minPts = minPts;
 	}
 
-	public List<Cluster> getClusters()
+	public List<Cluster<?>> getClusters()
 	{
 		if (this.clusters == null)
 		{
@@ -45,7 +43,7 @@ public abstract class DensityBased
 		return this.clusters;
 	}
 
-	protected abstract List<Cluster> cluster();
+	protected abstract List<Cluster<?>> cluster();
 
 	/**
 	 * Find the neighbors of r within range (this.epsilon)
@@ -55,24 +53,24 @@ public abstract class DensityBased
 	 * @param Record
 	 * @return Cluster of nearest neighbors to Record
 	 */
-	protected Cluster rangeQuery(RecordInterface r)
+	protected Cluster<?> rangeQuery(Object r)
 	{
-		Cluster c = new Cluster();
+		Cluster<Object> c = new Cluster<Object>();
 		c.addRecord(r);
-
-		for (RecordInterface r2 : this.sourceData)
+	
+		for (Object r2 : this.sourceData)
 		{
 			if (!r.equals(r2))
 			{
 				double mDistance = MathUtils.distance(
-						r2.getFeatureAndLabelDoubleArray(),
-						r.getFeatureAndLabelDoubleArray());
+						this.sourceData.getUnsupervisedDoubleArray(r2),
+						this.sourceData.getUnsupervisedDoubleArray(r));
 
 				this.distance.addValue(mDistance);
 
 				if (mDistance < this.epsilon)
 				{
-					r2.setNoise(false);
+					this.sourceData.setNoise(r2, false);
 
 					c.addRecord(r2);
 				}
@@ -98,7 +96,7 @@ public abstract class DensityBased
 		return this.distance;
 	}
 
-	public RecordList<RecordInterface> getSourceData()
+	public IRudderList<?> getSourceData()
 	{
 		return this.sourceData;
 	}

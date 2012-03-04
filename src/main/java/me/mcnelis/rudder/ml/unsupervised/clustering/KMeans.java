@@ -1,31 +1,35 @@
 package me.mcnelis.rudder.ml.unsupervised.clustering;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import me.mcnelis.rudder.data.RecordInterface;
-import me.mcnelis.rudder.data.collections.RecordList;
+import me.mcnelis.rudder.data.collections.IRudderList;
+import me.mcnelis.rudder.data.collections.RudderList;
 
 import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
 import org.apache.commons.math.util.MathUtils;
+import org.apache.log4j.Logger;
 
-public class KMeans
+public class KMeans<T>
 {
 
+	private static final Logger LOG = Logger.getLogger(KMeans.class);
+	
 	protected int k;
-	protected List<Cluster> clusters;
+	protected List<Cluster<T>> clusters;
 	protected double[][] previousCenters;
 	protected long maxIterations;
 	protected long currentIteration = 0l;
 	protected double minMovement = .0000001d;
-	protected RecordList<RecordInterface> sourceData;
+	protected IRudderList<T> sourceData;
 
-	@SuppressWarnings("unchecked")
-	public KMeans(int k, RecordList<? extends RecordInterface> data)
+	public KMeans(int k, IRudderList<T> data)
 	{
 		this.k = k;
-		this.sourceData = (RecordList<RecordInterface>) data;
+		this.sourceData = data;
 		this.init();
 	}
 
@@ -45,7 +49,7 @@ public class KMeans
 		this.maxIterations = 1000000000000l;
 		this.minMovement = .0000001d;
 	}
-	public List<Cluster> cluster()
+	public List<Cluster<T>> cluster()
 	{
 
 		// Get the random centers
@@ -57,9 +61,13 @@ public class KMeans
 			this.assignClusters();
 
 			// This could be parallelized
-			for (Cluster c : this.clusters)
+			for (Cluster<?> c : this.clusters)
 			{
-				c.calculateCentroid();
+				LOG.debug("Cluster size: " + c.size());
+				if(c.size() > 0)
+				{
+					c.calculateCentroid();
+				}
 			}
 
 		}
@@ -105,15 +113,23 @@ public class KMeans
 	protected void assignClusters()
 	{
 
-		for (Object o : this.sourceData)
+		LOG.debug("Source data size: " + this.sourceData.size());
+		List<Cluster<T>> tempClusters = new ArrayList<Cluster<T>>();
+		
+		for(int i = 0; i < this.clusters.size(); i++)
 		{
-			RecordInterface r = (RecordInterface) o;
+			tempClusters.add(new Cluster<T>());
+		}
+		for (T o : this.sourceData)
+		{
+			
 			double min = Double.NaN;
 			int clusterIdx = -1;
 			for (int i = 0; i < this.clusters.size(); i++)
 			{
 				double distance = MathUtils.distance(this.clusters.get(i)
-						.getCentroid(), r.getFeatureAndLabelDoubleArray());
+						.getCentroid(), this.sourceData.getUnsupervisedDoubleArray(o));
+				LOG.trace("Record: " + Arrays.toString(this.sourceData.getUnsupervisedDoubleArray(o)));
 				if (Double.isNaN(min) || distance < min)
 				{
 					clusterIdx = i;
@@ -121,9 +137,9 @@ public class KMeans
 				}
 			}
 
-			this.clusters.get(clusterIdx).addRecord(r);
+			tempClusters.get(clusterIdx).addRecord(o);
 		}
-
+		this.clusters = tempClusters;
 	}
 
 	/**
@@ -134,19 +150,26 @@ public class KMeans
 	 * 
 	 * @return clusters with a center set
 	 */
-	protected List<Cluster> chooseRandomCenters()
+	protected List<Cluster<T>> chooseRandomCenters()
 	{
-		ArrayList<Cluster> randomCluster = new ArrayList<Cluster>();
+		ArrayList<Cluster<T>> randomCluster = new ArrayList<Cluster<T>>();
 		Random generator = new Random();
 
 		for (int i = 0; i < this.k; i++)
 		{
 
-			Cluster c = new Cluster();
+			Cluster<T> c = new Cluster<T>();
 
-			c.setCentroid(((RecordInterface) this.sourceData.get(generator
-					.nextInt(this.sourceData.size())))
-					.getFeatureAndLabelDoubleArray());
+			c.setCentroid(
+				this.sourceData.getUnsupervisedDoubleArray(
+						this.sourceData.get(
+								generator.nextInt(
+										this.sourceData.size()
+										)
+								)
+						)
+				);
+			
 			randomCluster.add(c);
 		}
 		this.clusters = randomCluster;
@@ -163,12 +186,12 @@ public class KMeans
 		this.k = k;
 	}
 
-	public List<Cluster> getClusters()
+	public List<Cluster<T>> getClusters()
 	{
 		return clusters;
 	}
 
-	public void setClusters(List<Cluster> clusters)
+	public void setClusters(List<Cluster<T>> clusters)
 	{
 		this.clusters = clusters;
 	}
@@ -183,12 +206,12 @@ public class KMeans
 		this.minMovement = minMovement;
 	}
 
-	public RecordList<RecordInterface> getSourceData()
+	public IRudderList<T> getSourceData()
 	{
 		return sourceData;
 	}
 
-	public void setSourceData(RecordList<RecordInterface> sourceData)
+	public void setSourceData(IRudderList<T> sourceData)
 	{
 		this.sourceData = sourceData;
 	}

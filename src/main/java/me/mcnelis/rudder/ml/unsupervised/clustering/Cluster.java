@@ -3,8 +3,7 @@ package me.mcnelis.rudder.ml.unsupervised.clustering;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import me.mcnelis.rudder.data.RecordInterface;
-import me.mcnelis.rudder.data.collections.RecordList;
+import me.mcnelis.rudder.data.collections.RudderList;
 
 import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
 
@@ -15,7 +14,7 @@ import org.apache.commons.math.stat.descriptive.SynchronizedSummaryStatistics;
  * @author dmcnelis
  * 
  */
-public class Cluster extends RecordList<RecordInterface>
+public class Cluster<T> extends RudderList<T>
 {
 	/**
 	 * 
@@ -27,25 +26,26 @@ public class Cluster extends RecordList<RecordInterface>
 	{
 	}
 
-	public void addRecord(RecordInterface r)
-	{
+	public void addRecord(T r)
+	{		
 		this.add(r);
 
 	}
 
-	public void combineClusters(Cluster c)
+	@SuppressWarnings("unchecked")
+	public void combineClusters(Cluster<?> cluster)
 	{
-		for (Object o : c.getRecords())
+		for (Object o : cluster.getRecords())
 		{
-			RecordInterface r = (RecordInterface) o;
-			if (!this.contains(r))
+			
+			if (!this.contains(o))
 			{
-				this.add(r);
+				this.add((T) o);
 			}
 		}
 	}
 
-	public RecordList<RecordInterface> getRecords()
+	public Cluster<T> getRecords()
 	{
 		return this;
 	}
@@ -77,12 +77,12 @@ public class Cluster extends RecordList<RecordInterface>
 	protected synchronized double[] calculateCentroid()
 	{
 
-		this.centroid = new double[this.get(0).getFeatureAndLabelDoubleArray().length];
+		this.centroid = new double[this.getUnsupervisedDoubleArray(this.get(0)).length];
 
 		ArrayList<SynchronizedSummaryStatistics> stats = new ArrayList<SynchronizedSummaryStatistics>();
-		for (RecordInterface elem : this)
+		for (Object elem : this)
 		{
-			double[] arr = elem.getFeatureAndLabelDoubleArray();
+			double[] arr = this.getUnsupervisedDoubleArray(elem);
 			for (int i = 0; i < arr.length; i++)
 			{
 
@@ -141,16 +141,23 @@ public class Cluster extends RecordList<RecordInterface>
 		{
 			return false;
 		}
-		if (!(obj instanceof Cluster))
+		if (!(obj instanceof Cluster<?>))
 		{
 			return false;
 		}
-		Cluster other = (Cluster) obj;
+		@SuppressWarnings("unchecked")
+		Cluster<T> other = (Cluster<T>) obj;
 		if (!Arrays.equals(centroid, other.centroid))
 		{
 			return false;
 		}
 
 		return true;
+	}
+
+	public boolean isAssigned(Object o)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

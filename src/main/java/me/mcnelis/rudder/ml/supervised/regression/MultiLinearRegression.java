@@ -1,13 +1,14 @@
 package me.mcnelis.rudder.ml.supervised.regression;
 
-import me.mcnelis.rudder.data.RecordInterface;
-import me.mcnelis.rudder.data.collections.RecordList;
+import me.mcnelis.rudder.data.collections.IRudderList;
+import me.mcnelis.rudder.data.collections.RudderList;
 
 import org.apache.commons.math.exception.DimensionMismatchException;
 import org.apache.commons.math.stat.descriptive.SynchronizedMultivariateSummaryStatistics;
 import org.apache.commons.math.stat.regression.GLSMultipleLinearRegression;
 import org.apache.commons.math.stat.regression.MultipleLinearRegression;
 import org.apache.commons.math.stat.regression.OLSMultipleLinearRegression;
+import org.apache.log4j.Logger;
 
 /**
  * Wrapper for @link
@@ -17,10 +18,10 @@ import org.apache.commons.math.stat.regression.OLSMultipleLinearRegression;
  * @author dmcnelis
  * 
  */
-public class MultiLinearRegression
+public class MultiLinearRegression<T>
 {
-
-	protected RecordList<RecordInterface> records;
+	private static final Logger LOG = Logger.getLogger(MultiLinearRegression.class);
+	protected IRudderList<T> records;
 	protected double[] betas;
 	protected SynchronizedMultivariateSummaryStatistics stats;
 	protected MultipleLinearRegression ols;
@@ -32,13 +33,13 @@ public class MultiLinearRegression
 	}
 
 	@SuppressWarnings("unchecked")
-	public MultiLinearRegression(RecordList<? extends RecordInterface> records)
+	public MultiLinearRegression(IRudderList<T> records)
 	{
 		try
 		{
 			synchronized (this)
 			{
-				this.records = (RecordList<RecordInterface>) records;
+				this.records = (IRudderList<T>) records;
 				this.stats = new SynchronizedMultivariateSummaryStatistics(
 						this.records.getSupervisedSampleDoubleArray().length,
 						false);
@@ -51,7 +52,7 @@ public class MultiLinearRegression
 	}
 
 	@SuppressWarnings("unchecked")
-	public MultiLinearRegression(RecordList<? extends RecordInterface> records,
+	public MultiLinearRegression(IRudderList<T> records,
 			RegressionTypes type)
 	{
 
@@ -60,7 +61,7 @@ public class MultiLinearRegression
 			synchronized (this)
 			{
 				this.type = type;
-				this.records = (RecordList<RecordInterface>) records;
+				this.records = (IRudderList<T>) records;
 				this.stats = new SynchronizedMultivariateSummaryStatistics(
 						this.records.getSupervisedSampleDoubleArray().length,
 						false);
@@ -78,25 +79,35 @@ public class MultiLinearRegression
 	 * @param record
 	 * @return success on adding record, negative if unable to add
 	 */
-	public synchronized boolean addRecord(RecordInterface record)
+	@SuppressWarnings("unchecked")
+	public synchronized boolean addRecord(Object record)
 	{
 		if (this.records == null)
 		{
-			this.records = new RecordList<RecordInterface>();
-			this.stats = new SynchronizedMultivariateSummaryStatistics(
-					record.getFeatureDoubleArray().length, false);
+			this.records = new RudderList<T>();
+			
 		}
 		try
 		{
-			this.stats.addValue(record.getFeatureDoubleArray());
-			return this.records.add(record);
+			this.records.add((T) record);
+			
+			if(this.stats == null)
+			{
+				this.stats = new SynchronizedMultivariateSummaryStatistics(
+					this.records.getSupervisedSampleDoubleArray().length, false);
+			}
+			this.stats.addValue(this.records.getNumericFeatureArray(record));
+			
+			return true;
 		}
 		catch (DimensionMismatchException e)
 		{
+			LOG.error(e);
 			return false;
 		}
 		catch (@SuppressWarnings("deprecation") org.apache.commons.math.DimensionMismatchException e)
 		{
+			LOG.error(e);
 			// Deprecated, will remove when we move to Commons Math 3.0
 			return false;
 		}

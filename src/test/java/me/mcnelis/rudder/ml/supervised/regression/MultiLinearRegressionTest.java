@@ -3,15 +3,16 @@ package me.mcnelis.rudder.ml.supervised.regression;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import me.mcnelis.rudder.data.NumericFeature;
 import me.mcnelis.rudder.data.MockRecord;
-import me.mcnelis.rudder.data.Record;
-import me.mcnelis.rudder.data.collections.RecordList;
+import me.mcnelis.rudder.data.NumericFeature;
+import me.mcnelis.rudder.data.collections.IRudderList;
+import me.mcnelis.rudder.data.collections.RudderList;
 
 import org.junit.Test;
 
@@ -21,23 +22,42 @@ public class MultiLinearRegressionTest {
 
 	@Test
 	public void testAddRecordSuccess() {
-		MultiLinearRegression ols = new MultiLinearRegression();
-		MockRecord r = new MockRecord();
+		MultiLinearRegression<MockRecord> ols = new MultiLinearRegression<MockRecord>();
+		MockRecord r = new MockRecord(){
+			@SuppressWarnings("unused")
+			@NumericFeature
+			double f2 = 0d;
+		};
 		assertTrue(ols.addRecord(r));
 	}
 	
 	@Test
 	public void testAddRecordFailure() {
-		MultiLinearRegression ols = new MultiLinearRegression();
-		MockRecord r = new MockRecord();
-		assertTrue(ols.addRecord(r));
-		
-		Record r2 = new Record(){
+		MultiLinearRegression<MockRecord> ols = new MultiLinearRegression<MockRecord>();
+		MockRecord r = new MockRecord(){
 			@SuppressWarnings("unused")
 			@NumericFeature
 			double f2 = 0d;
+			@SuppressWarnings("unused")
+			@NumericFeature
+			double f3 = 0d;
 		};
-		assertFalse(ols.addRecord(r2));
+		assertTrue(ols.addRecord(r));
+		
+		MockRecord r2 = new MockRecord(){
+			@SuppressWarnings("unused")
+			@NumericFeature
+			double f2 = 0d;
+			
+		};
+		try
+		{
+			ols.addRecord(r2);
+			fail("Added records with different dimensions");
+		} catch(Exception e)
+		{
+			assertTrue(true);
+		}
 	}
 
 
@@ -51,14 +71,14 @@ public class MultiLinearRegressionTest {
 			e.printStackTrace();
 		}
 		
-		RecordList<MockRecord> list = new RecordList<MockRecord>();
+		IRudderList<MockRecord> list = new RudderList<MockRecord>();
 		
 		String[] line = null;
 		try {
 			while((line = r.readNext())!=null) {
 				MockRecord m = new MockRecord();
 				try {
-					m.setLabel("doubleLabel", Double.parseDouble(line[0]));
+					m.setDoubleLabel(Double.parseDouble(line[0]));
 					m.setFeature("feature1", Double.parseDouble(line[1]));
 					m.setFeature("feature2", Double.parseDouble(line[2]));
 					m.setFeature("feature3", Double.parseDouble(line[3]));
